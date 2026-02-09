@@ -10,6 +10,6 @@ public class LogicScript : MonoBehaviour
     void Update()
     {
         // Update UI to show the current number of nest blocks
-        nestBlocksText.text = "Nest Blocks: " + NestScript.Instance.nestBlocks;
+        nestBlocksText.text = "Nest Blocks: ";
     }
 }

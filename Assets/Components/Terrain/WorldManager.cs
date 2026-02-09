@@ -41,6 +41,11 @@ namespace Antymology.Terrain
         /// </summary>
         private SimplexNoise SimplexNoise;
 
+        /// <summary>
+        /// The spawn point for ants - in world coordinates.
+        /// </summary>
+        private Vector3 SpawnPoint;
+
         #endregion
 
         #region Initialization
@@ -80,20 +85,75 @@ namespace Antymology.Terrain
             Camera.main.transform.position = new Vector3(0 / 2, Blocks.GetLength(1), 0);
             Camera.main.transform.LookAt(new Vector3(Blocks.GetLength(0), 0, Blocks.GetLength(2)));
 
+            FindSpawnPoint();
             GenerateAnts();
         }
 
         /// <summary>
-        /// TO BE IMPLEMENTED BY YOU
+        /// Spawns ants at the spawn point.
         /// </summary>
         private void GenerateAnts()
         {
-            throw new NotImplementedException();
+            // Spawns number of ants based on configuration manager of initial population size
+            for (int i = 0; i < ConfigurationManager.Instance.Starting_Ant_Count; i++)
+            {
+                // Instantiate the ant prefab at the spawn point with a slight random offset
+                Vector3 spawnPos = SpawnPoint + new Vector3(
+                    RNG.Next(-1, 2) * 0.5f,
+                    RNG.Next(0, 2) * 0.5f,
+                    RNG.Next(-1, 2) * 0.5f
+                );
+                
+                Instantiate(antPrefab, spawnPos, Quaternion.identity);
+            }
         }
 
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Finds a spawn point in an air block that's directly above a non-air block.
+        /// </summary>
+        private void FindSpawnPoint()
+        {
+            // Start searching from the middle of the map (based on x and z coordinates)
+            int startX = Blocks.GetLength(0) / 2;
+            int startZ = Blocks.GetLength(2) / 2;
+
+            // Try to find a suitable spawn point near the center
+            for (int y = Blocks.GetLength(1) - 2; y >= 1; y--)
+            {
+                // If we found an air block above a non-air block at the center, use it
+                if (Blocks[startX, y, startZ] is AirBlock && 
+                    // check if the block below is not an air block (prevent falling too much)
+                    !(Blocks[startX, y - 1, startZ] is AirBlock))
+                {
+                    SpawnPoint = new Vector3(startX, y, startZ);
+                    return;
+                }
+            }
+
+            // If no suitable point found near center, search the entire world
+            for (int x = 1; x < Blocks.GetLength(0) - 1; x++)
+            {
+                for (int z = 1; z < Blocks.GetLength(2) - 1; z++)
+                {
+                    for (int y = Blocks.GetLength(1) - 2; y >= 1; y--)
+                    {
+                        if (Blocks[x, y, z] is AirBlock && 
+                            !(Blocks[x, y - 1, z] is AirBlock))
+                        {
+                            SpawnPoint = new Vector3(x, y, z);
+                            return;
+                        }
+                    }
+                }
+            }
+
+            // Use the center and top of the world if no better spawn point found
+            SpawnPoint = new Vector3(startX, Blocks.GetLength(1) - 1, startZ);
+        }
 
         /// <summary>
         /// Retrieves an abstract block type at the desired world coordinates.
