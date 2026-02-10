@@ -105,7 +105,9 @@ namespace Antymology.Terrain
 
                 Vector3 spawnPos = new Vector3(worldX, worldY, worldZ);
 
-                Instantiate(antPrefab, spawnPos, Quaternion.identity);
+                // Rotate ant -90 degrees on X-axis to orient it upright
+                Quaternion spawnRotation = Quaternion.Euler(-90, 0, 0);
+                Instantiate(antPrefab, spawnPos, spawnRotation);
             }
         }
 
