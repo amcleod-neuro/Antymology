@@ -1,10 +1,10 @@
 using UnityEngine;
-using UnityEngine.UI;
+using TMPro;
 using System.Collections.Generic;
 
 public class AntSelectorUI : MonoBehaviour
 {
-    [SerializeField] Dropdown antSelector; // Dropdown to select which ant to track
+    [SerializeField] TMP_Dropdown antSelector; // Dropdown to select which ant to track
     [SerializeField] TrackingCameraScript trackingCamera; // Reference to the camera script to set the target
     
     // List of all ant transforms

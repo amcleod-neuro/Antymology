@@ -151,7 +151,7 @@ namespace Antymology.Terrain
                 }
             }
 
-            // Use the center and top of the world if no better spawn point found
+            // Use the center and top of the world if no reasonable spawn point found
             SpawnPoint = new Vector3(startX, Blocks.GetLength(1) - 1, startZ);
         }
 
