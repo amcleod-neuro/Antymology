@@ -19,14 +19,6 @@ public class AntScript : MonoBehaviour
          InvokeRepeating(nameof(LoseHealth), 1f, 1f);
     }
 
-    // Function to lose health over time
-    void LoseHealth()
-    {
-        currentHealth -= healthLossPerSecond;
-        Debug.Log("Ant health decreased to " + currentHealth);
-    }
-
-
     // Update is called once per frame
     void Update()
     {
@@ -38,4 +30,18 @@ public class AntScript : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
+    // Function to lose health over time
+    void LoseHealth()
+    {
+        currentHealth -= healthLossPerSecond;
+        Debug.Log("Ant health decreased to " + currentHealth);
+    }
+
+    void MoveAnt()
+    {
+        // Placeholder for movement
+    }
+
+
 }
