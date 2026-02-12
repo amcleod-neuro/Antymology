@@ -17,6 +17,20 @@ public class Ant : MonoBehaviour
          currentHealth = maxHealth;
          Debug.Log("Ant health set to " + currentHealth);
 
+         // If this is a worker ant (not QueenAnt), apply worker material
+         if (this.GetType() == typeof(Ant))
+         {
+             Material workerMaterial = Resources.Load<Material>("workerAntMat");
+             if (workerMaterial != null)
+             {
+                 GetComponent<Renderer>().material = workerMaterial;
+             }
+             else
+             {
+                 Debug.LogError("Worker ant material not found in Resources/workerAntMat");
+             }
+         }
+
          // Triggers health loss to be repeated every second
          InvokeRepeating(nameof(LoseHealth), 1f, 1f);
     }
@@ -102,6 +116,7 @@ public class Ant : MonoBehaviour
         }
     }
 
+    // Function to transfer health to another ant in the same block
     void GiveHealth(Ant otherAnt, float healthToGive)
     {
         // Checks that the current ant has more health than the amount it is trying to give and that the other ant is in the same block
@@ -113,6 +128,7 @@ public class Ant : MonoBehaviour
         }
     }
 
+    // Function to receive health from another ant
     void ReceiveHealth(float healthReceived)
     {
         currentHealth = Mathf.Min(currentHealth + healthReceived, maxHealth);
@@ -137,9 +153,20 @@ public class Ant : MonoBehaviour
         return true;
     }
 
+    // Checks whether the ant can move forward based on the blocks in front of it and above
     bool CanMoveForward()
     {
-        return true; // Placeholder for movement logic
+        AbstractBlock blockInFront = GetBlockInFront();
+        AbstractBlock blockAboveAndInFront = GetBlockAboveandInFront();
+        AbstractBlock blockTwoAboveAndInFront = GetBlockTwoAboveAndInFront();
+
+        // Checks that there is an airblock in front of the ant somewhere in the range it can move
+        if (blockInFront is Antymology.Terrain.AirBlock or 
+            blockAboveAndInFront is Antymology.Terrain.AirBlock or 
+            blockTwoAboveAndInFront is Antymology.Terrain.AirBlock)
+            return true;
+        
+        return false;
     }
 
     #endregion
@@ -166,7 +193,7 @@ public class Ant : MonoBehaviour
     {
         Vector3 antPos = transform.position;
         int x = Mathf.FloorToInt(antPos.x);
-        int y = Mathf.FloorToInt(antPos.y) - 1;
+        int y = Mathf.FloorToInt(antPos.y) - 3;
         int z = Mathf.FloorToInt(antPos.z);
 
         return Antymology.Terrain.WorldManager.Instance.GetBlock(x, y, z);

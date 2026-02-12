@@ -2,10 +2,18 @@ using UnityEngine;
 
 public class QueenAnt : Ant
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
-        
+        // Load and apply the queen ant material
+        Material queenMaterial = Resources.Load<Material>("queenAntMat");
+        if (queenMaterial != null)
+        {
+            GetComponent<Renderer>().material = queenMaterial;
+        }
+        else
+        {
+            Debug.LogError("Queen ant material not found in Resources/queenAntMat");
+        }
     }
 
     // Update is called once per frame
@@ -20,7 +28,7 @@ public class QueenAnt : Ant
     void PlaceNestBlock()
     {
         // Uses ant function to get the coordinates of the block in front of the queen
-        Vector3Int blockInFront = GetBlockInFront();
+        AbstractBlock blockInFront = GetBlockInFront();
 
         if (CanPlaceNestBlock(blockInFront.x, blockInFront.y, blockInFront.z))
         {
@@ -34,11 +42,11 @@ public class QueenAnt : Ant
     #region Logic
 
     // Check that the block in front of the queen is air and she has enough health to place down a nest block
-    bool CanPlaceNestBlock(int worldX, int worldY, int worldZ)
+    bool CanPlaceNestBlock()
     {
         // Checks if the block in front is an air block
-        AbstractBlock block = Antymology.Terrain.WorldManager.Instance.GetBlock(worldX, worldY, worldZ);
-        if (!(block is Antymology.Terrain.AirBlock))
+        AbstractBlock blockInFront = GetBlockInFront();
+        if (!(blockInFront is Antymology.Terrain.AirBlock))
             return false;
 
         // Checks the queen has enough health to place the nest block
