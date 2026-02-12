@@ -27,12 +27,12 @@ public class QueenAnt : Ant
     // Function to place a nest block in front of the queen ant and remove her health accordingly
     void PlaceNestBlock()
     {
-        // Uses ant function to get the coordinates of the block in front of the queen
+        // Uses ant function to get the block in front of the queen
         AbstractBlock blockInFront = GetBlockInFront();
 
-        if (CanPlaceNestBlock(blockInFront.x, blockInFront.y, blockInFront.z))
+        if (CanPlaceNestBlock(blockInFront.worldXCoordinate, blockInFront.worldYCoordinate, blockInFront.worldZCoordinate))
         {
-            Antymology.Terrain.WorldManager.Instance.SetBlock(blockInFront.x, blockInFront.y, blockInFront.z, new Antymology.Terrain.NestBlock());
+            Antymology.Terrain.WorldManager.Instance.SetBlock(blockInFront.worldXCoordinate, blockInFront.worldYCoordinate, blockInFront.worldZCoordinate, new Antymology.Terrain.NestBlock());
             currentHealth -= maxHealth / 3f; // Reduce health by 1/3 of max health
         }
     }
@@ -42,7 +42,7 @@ public class QueenAnt : Ant
     #region Logic
 
     // Check that the block in front of the queen is air and she has enough health to place down a nest block
-    bool CanPlaceNestBlock()
+    bool CanPlaceNestBlock(int x, int y, int z)
     {
         // Checks if the block in front is an air block
         AbstractBlock blockInFront = GetBlockInFront();

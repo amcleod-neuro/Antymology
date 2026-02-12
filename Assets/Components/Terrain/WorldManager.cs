@@ -107,7 +107,16 @@ namespace Antymology.Terrain
 
                 // Rotate ant -90 degrees on X-axis to orient it upright
                 Quaternion spawnRotation = Quaternion.Euler(-90, 0, 0);
-                Instantiate(antPrefab, spawnPos, spawnRotation);
+
+                // Spawn the first ant as the queen ant and the rest as worker ants
+                if (i == 0)
+                {
+                    Instantiate(ConfigurationManager.Instance.QueenAntPrefab, spawnPos, spawnRotation);
+                }
+                else
+                {
+                    Instantiate(ConfigurationManager.Instance.WorkerAntPrefab, spawnPos, spawnRotation);
+                }
             }
         }
 

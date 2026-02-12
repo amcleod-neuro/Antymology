@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 public class Ant : MonoBehaviour
 {
-    // Public variables to be modified and private variables to track health
+    // Public variables to be modified and protected variables to track health
     public float maxHealth = 100;
-    private float currentHealth;
+    protected float currentHealth;
 
     // List to track ants in the same block
-    private List<Ant> antsInBlock;
+    protected List<Ant> antsInBlock;
 
     #region Basics
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -51,7 +51,7 @@ public class Ant : MonoBehaviour
 
     #region Actions
     // Function to lose health over time
-    void LoseHealth()
+    protected void LoseHealth()
     {
         currentHealth -= ConfigurationManager.Instance.Health_Loss_Per_Second;
 
@@ -61,7 +61,7 @@ public class Ant : MonoBehaviour
         }
     }
 
-    void ChooseNextAction()
+    protected void ChooseNextAction()
     {
         // Get the block below the ant
         AbstractBlock blockBelowInstance = GetBlockBelow();
@@ -81,20 +81,20 @@ public class Ant : MonoBehaviour
         }
     }
 
-    void MoveAnt()
+    protected void MoveAnt()
     {
         // Placeholder for movement
     }
 
     // Function to eat mulch and gain health
-    void EatMulch()
+    protected void EatMulch()
     {
         // Get the block below the ant to see if there is mulch to eat
         AbstractBlock block = GetBlockBelow();
         
         if (CanEatBlock(block))
         {
-            Antymology.Terrain.WorldManager.Instance.SetBlock(block.pos.x, block.pos.y, block.pos.z, new Antymology.Terrain.AirBlock());
+            Antymology.Terrain.WorldManager.Instance.SetBlock(block.worldXCoordinate, block.worldYCoordinate, block.worldZCoordinate, new Antymology.Terrain.AirBlock());
             transform.position += new Vector3(0, -5, 0); // Move the ant down into the space where the block was but not too far to avoid clipping issues
             // Increase health but do not exceed max health
             currentHealth = Mathf.Min(currentHealth + ConfigurationManager.Instance.Health_Gain_From_Mulch, maxHealth);
@@ -103,7 +103,7 @@ public class Ant : MonoBehaviour
     }
 
     // Function to dig up the block below an ant and move down into the space where the block was
-    void DigBlock()
+    protected void DigBlock()
     {
         // Get the block below the ant to see if there is a block to dig
         AbstractBlock block = GetBlockBelow();
@@ -111,13 +111,13 @@ public class Ant : MonoBehaviour
         // Checks that the block isn't a container block, which ants aren't able to dig through
         if (!(block is Antymology.Terrain.ContainerBlock))
         {
-            Antymology.Terrain.WorldManager.Instance.SetBlock(block.pos.x, block.pos.y, block.pos.z, new Antymology.Terrain.AirBlock());
+            Antymology.Terrain.WorldManager.Instance.SetBlock(block.worldXCoordinate, block.worldYCoordinate, block.worldZCoordinate, new Antymology.Terrain.AirBlock());
             transform.position += new Vector3(0, -5, 0); // Move the ant down into the space where the block was but not too far to avoid clipping issues
         }
     }
 
     // Function to transfer health to another ant in the same block
-    void GiveHealth(Ant otherAnt, float healthToGive)
+    protected void GiveHealth(Ant otherAnt, float healthToGive)
     {
         // Checks that the current ant has more health than the amount it is trying to give and that the other ant is in the same block
         if (currentHealth > healthToGive && antsInBlock.Contains(otherAnt))
@@ -129,7 +129,7 @@ public class Ant : MonoBehaviour
     }
 
     // Function to receive health from another ant
-    void ReceiveHealth(float healthReceived)
+    protected void ReceiveHealth(float healthReceived)
     {
         currentHealth = Mathf.Min(currentHealth + healthReceived, maxHealth);
         Debug.Log($"Ant received {healthReceived} health. New health: {currentHealth}");
@@ -141,7 +141,7 @@ public class Ant : MonoBehaviour
     #region Logic Checks
 
     // Checks if a block is mulch and no other ants are currently also trying to eat it
-    bool CanEatBlock(AbstractBlock block)
+    protected bool CanEatBlock(AbstractBlock block)
     {
         if (!(block is Antymology.Terrain.MulchBlock))
             return false;
@@ -154,16 +154,14 @@ public class Ant : MonoBehaviour
     }
 
     // Checks whether the ant can move forward based on the blocks in front of it and above
-    bool CanMoveForward()
+    protected bool CanMoveForward()
     {
         AbstractBlock blockInFront = GetBlockInFront();
         AbstractBlock blockAboveAndInFront = GetBlockAboveandInFront();
         AbstractBlock blockTwoAboveAndInFront = GetBlockTwoAboveAndInFront();
 
         // Checks that there is an airblock in front of the ant somewhere in the range it can move
-        if (blockInFront is Antymology.Terrain.AirBlock or 
-            blockAboveAndInFront is Antymology.Terrain.AirBlock or 
-            blockTwoAboveAndInFront is Antymology.Terrain.AirBlock)
+        if (blockInFront is Antymology.Terrain.AirBlock || blockAboveAndInFront is Antymology.Terrain.AirBlock || blockTwoAboveAndInFront is Antymology.Terrain.AirBlock)
             return true;
         
         return false;
@@ -174,7 +172,7 @@ public class Ant : MonoBehaviour
     #region Get Blocks
 
     // Function to get the block in front of the ant based on its current rotation
-    AbstractBlock GetBlockInFront()
+    protected AbstractBlock GetBlockInFront()
     {
         Vector3 antPos = transform.position;
         
@@ -189,7 +187,7 @@ public class Ant : MonoBehaviour
     }
 
     // Function to get the block directly below the ant
-    AbstractBlock GetBlockBelow()
+    protected AbstractBlock GetBlockBelow()
     {
         Vector3 antPos = transform.position;
         int x = Mathf.FloorToInt(antPos.x);
@@ -200,7 +198,7 @@ public class Ant : MonoBehaviour
     }
 
     // Function to get the block above and in front of the ant based on its current rotation
-    AbstractBlock GetBlockAboveandInFront()
+    protected AbstractBlock GetBlockAboveandInFront()
     {
         Vector3 antPos = transform.position;
         
@@ -217,7 +215,7 @@ public class Ant : MonoBehaviour
     }
 
     // Function to get the block one block forward and two blocks above the ant based on its current rotation
-    AbstractBlock GetBlockTwoAboveAndInFront()
+    protected AbstractBlock GetBlockTwoAboveAndInFront()
     {
         Vector3 antPos = transform.position;
         
