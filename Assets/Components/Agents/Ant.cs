@@ -11,39 +11,33 @@ public class Ant : MonoBehaviour
     protected List<Ant> antsInBlock;
 
     #region Basics
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
          currentHealth = maxHealth;
          Debug.Log("Ant health set to " + currentHealth);
 
-         // If this is a worker ant (not QueenAnt), apply worker material
-         if (this.GetType() == typeof(Ant))
-         {
-             Material workerMaterial = Resources.Load<Material>("workerAntMat");
-             if (workerMaterial != null)
-             {
-                 GetComponent<Renderer>().material = workerMaterial;
-             }
-             else
-             {
-                 Debug.LogError("Worker ant material not found in Resources/workerAntMat");
-             }
-         }
-
          // Triggers health loss to be repeated every second
          InvokeRepeating(nameof(LoseHealth), 1f, 1f);
     }
 
-    // Update is called once per frame
-    void Update()
+    protected void UpdateAntsInBlock()
     {
-
-        // Kill ant if health is dropped to zero
-        if (currentHealth <= 0)
+        // Check that the block below the ant is the same as the block below the other ants to determine if they are in the same block
+        antsInBlock = new List<Ant>();
+        Ant[] allAnts = FindObjectsOfType<Ant>();
+        AbstractBlock blockBelow = GetBlockBelow();
+        
+        // Loops through all ants to find which ones are in the same block as the current ant and adds them to the antsInBlock list
+        foreach (Ant ant in allAnts)
         {
-            Debug.Log("Ant has died.");
-            Destroy(gameObject);
+            AbstractBlock otherAntBlockBelow = ant.GetBlockBelow();
+            
+            if (blockBelow == otherAntBlockBelow)
+            {
+                antsInBlock.Add(ant);
+            }
         }
     }
 
@@ -58,26 +52,6 @@ public class Ant : MonoBehaviour
         if (Mathf.RoundToInt(currentHealth) % 10 == 0) // Log health every 10% health lost
         {
             Debug.Log("Ant health decreased to " + currentHealth);
-        }
-    }
-
-    protected void ChooseNextAction()
-    {
-        // Get the block below the ant
-        AbstractBlock blockBelowInstance = GetBlockBelow();
-        
-        // Find all ants at the same Y coordinate as the ant (same air block layer)
-        antsInBlock = new List<Ant>();
-        Ant[] allAnts = FindObjectsOfType<Ant>();
-        int antBlockY = Mathf.FloorToInt(transform.position.y);
-        
-        foreach (Ant ant in allAnts)
-        {
-            int otherBlockY = Mathf.FloorToInt(ant.transform.position.y);
-            if (otherBlockY == antBlockY)
-            {
-                antsInBlock.Add(ant);
-            }
         }
     }
 

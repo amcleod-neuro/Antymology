@@ -64,4 +64,14 @@ public class ConfigurationManager : Singleton<ConfigurationManager>
     /// The amount of health lost per second for ants.
     /// </summary>
     public float Health_Loss_Per_Second = 1f;
+
+    /// <summary>
+    /// The prefab for the queen ant.
+    /// </summary>
+    public GameObject QueenAntPrefab;
+
+    /// <summary>
+    /// The prefab for worker ants.
+    /// </summary>
+    public GameObject WorkerAntPrefab;
 }
