@@ -41,15 +41,27 @@ public class ConfigurationManager : Singleton<ConfigurationManager>
     public int Acidic_Region_Radius = 5;
 
     /// <summary>
-    /// The number of acidic regions on the map.
+    /// The number of container spheres on the map.
     /// </summary>
     public int Number_Of_Conatiner_Spheres = 5;
 
     /// <summary>
-    /// The radius of each acidic region
+    /// The radius of each container sphere
     /// </summary>
     public int Conatiner_Sphere_Radius = 20;
 
-    // Number of ants to spawn at the start of the game
+    /// <summary>
+    /// The number of ants to spawn at the start of the game.
+    /// </summary>
     public int Starting_Ant_Count = 100;
+
+    /// <summary>
+    /// The amount of health gained from mulch blocks.
+    /// </summary>
+    public int Health_Gain_From_Mulch = 20;
+
+    /// <summary> 
+    /// The amount of health lost per second for ants.
+    /// </summary>
+    public float Health_Loss_Per_Second = 1f;
 }
