@@ -16,7 +16,7 @@ public class Ant : MonoBehaviour
     void Start()
     {
          currentHealth = maxHealth;
-         Debug.Log("Ant health set to " + currentHealth);
+         Debug.Log(gameObject.name + " health set to " + currentHealth);
 
          // Triggers health loss to be repeated every second
          InvokeRepeating(nameof(LoseHealth), 1f, 1f);
@@ -29,7 +29,7 @@ public class Ant : MonoBehaviour
         // Kill ant if health is dropped to zero
         if (currentHealth <= 0)
         {
-            Debug.Log("Ant has died.");
+            Debug.Log(gameObject.name + " has died.");
             Destroy(gameObject);
 
             // Update the ant selector UI with the new ants
@@ -63,15 +63,23 @@ public class Ant : MonoBehaviour
     #endregion
 
     #region Actions
-    // Function to lose health over time
+    // Function to lose health over time, double if on an acidic block
     protected void LoseHealth()
     {
         currentHealth -= ConfigurationManager.Instance.Health_Loss_Per_Second;
 
+        // Check if the block below is acidic and double the health loss
+        AbstractBlock blockBelow = GetBlockBelow();
+        if (blockBelow is Antymology.Terrain.AcidicBlock)
+        {
+            currentHealth -= ConfigurationManager.Instance.Health_Loss_Per_Second;         
+        }
+
         if (Mathf.RoundToInt(currentHealth) % 10 == 0) // Log health every 10% health lost
         {
-            Debug.Log("Ant health decreased to " + currentHealth);
+            Debug.Log(gameObject.name + " health decreased to " + currentHealth);
         }
+
     }
 
     protected void MoveAnt()
@@ -91,7 +99,7 @@ public class Ant : MonoBehaviour
             transform.position += new Vector3(0, -5, 0); // Move the ant down into the space where the block was but not too far to avoid clipping issues
             // Increase health but do not exceed max health
             currentHealth = Mathf.Min(currentHealth + ConfigurationManager.Instance.Health_Gain_From_Mulch, maxHealth);
-            Debug.Log("Ant ate mulch. Health increased to " + currentHealth);
+            Debug.Log(gameObject.name + " ate mulch. Health increased to " + currentHealth);
         }
     }
 
@@ -117,7 +125,7 @@ public class Ant : MonoBehaviour
         {
             currentHealth -= healthToGive;
             otherAnt.ReceiveHealth(healthToGive);
-            Debug.Log($"Ant gave {healthToGive} health to another ant. New health: {currentHealth}");
+            Debug.Log(gameObject.name + " gave " + healthToGive + " health to another ant. New health: " + currentHealth);
         }
     }
 
@@ -125,7 +133,7 @@ public class Ant : MonoBehaviour
     protected void ReceiveHealth(float healthReceived)
     {
         currentHealth = Mathf.Min(currentHealth + healthReceived, maxHealth);
-        Debug.Log($"Ant received {healthReceived} health. New health: {currentHealth}");
+        Debug.Log(gameObject.name + " received " + healthReceived + " health. New health: " + currentHealth);
     }
 
 

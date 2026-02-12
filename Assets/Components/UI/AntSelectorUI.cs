@@ -7,6 +7,8 @@ public class AntSelectorUI : MonoBehaviour
     [SerializeField] TMP_Dropdown antSelector; // Dropdown to select which ant to track
     [SerializeField] TrackingCameraScript trackingCamera; // Reference to the camera script to set the target
     
+    // Sorted array of all ants in the scene
+    private Ant[] sortedAnts = new Ant[0];
 
     // Function to update the dropdown with all ants in the scene
     public void UpdateAntSelector()
@@ -15,8 +17,10 @@ public class AntSelectorUI : MonoBehaviour
         if (antSelector != null)
             antSelector.options.Clear();
 
+        sortedAnts = new Ant[0]; // Clear the sorted ants array
+
         // Find and sort all ants so Queen is first
-        Ant[] sortedAnts = FindObjectsOfType<Ant>();
+        sortedAnts = FindObjectsOfType<Ant>();
         System.Array.Sort(sortedAnts, (a, b) => {
             bool aIsQueen = a is QueenAnt;
             bool bIsQueen = b is QueenAnt;
