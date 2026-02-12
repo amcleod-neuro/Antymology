@@ -19,17 +19,17 @@ public class AntSelectorUI : MonoBehaviour
     IEnumerator<WaitForSeconds> InitializeWhenAntsReady()
     {
         // Wait until we find ants in the scene
-        AntScript[] allAntScripts = FindObjectsOfType<AntScript>();
+        Ant[] allAnts = FindObjectsOfType<Ant>();
 
         // Wait until the number of ants matches the expected starting count
-        while (allAntScripts.Length < ConfigurationManager.Instance.Starting_Ant_Count)
+        while (allAnts.Length < ConfigurationManager.Instance.Starting_Ant_Count)
         {
             yield return new WaitForSeconds(0.1f);
-            allAntScripts = FindObjectsOfType<AntScript>();
+            allAnts = FindObjectsOfType<Ant>();
         }
 
         // Now collect all ant transforms
-        foreach (AntScript ant in allAntScripts)
+        foreach (Ant ant in allAnts)
         {
             allAnts.Add(ant.transform);
         }

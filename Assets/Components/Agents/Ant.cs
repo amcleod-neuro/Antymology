@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class AntScript : MonoBehaviour
+public class Ant : MonoBehaviour
 {
     // Public variables to be modified and private variables to track health
     public float maxHealth = 100;
@@ -12,7 +12,7 @@ public class AntScript : MonoBehaviour
     private Vector3Int blockBelow;
 
     // List to track ants in the same block
-    private List<AntScript> antsInBlock;
+    private List<Ant> antsInBlock;
 
     #region Basics
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -58,9 +58,9 @@ public class AntScript : MonoBehaviour
         );
 
         // Find all ants in the same air block
-        antsInBlock = new List<AntScript>();
-        AntScript[] allAnts = FindObjectsOfType<AntScript>();
-        foreach (AntScript ant in allAnts)
+        antsInBlock = new List<Ant>();
+        Ant[] allAnts = FindObjectsOfType<Ant>();
+        foreach (Ant ant in allAnts)
         {
             Vector3 otherAntPos = ant.transform.position;
             int otherBlockX = Mathf.RoundToInt(otherAntPos.x + 0.5f);
@@ -99,7 +99,7 @@ public class AntScript : MonoBehaviour
     #region Logic Checks
 
     // Checks if the block below is mulch and no other ants are currently also on it
-    bool CanEatMulch(int worldX, int worldY, int worldZ, List<AntScript> antsHere)
+    bool CanEatMulch(int worldX, int worldY, int worldZ, List<Ant> antsHere)
     {
         Antymology.Terrain.AbstractBlock block = Antymology.Terrain.WorldManager.Instance.GetBlock(worldX, worldY, worldZ);
         if (!(block is Antymology.Terrain.MulchBlock))

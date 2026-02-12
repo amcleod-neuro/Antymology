@@ -1,9 +1,9 @@
 using UnityEngine;
 
-public class QueenScript : MonoBehaviour
+public class QueenAnt : Ant
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void Awake()
     {
         
     }
