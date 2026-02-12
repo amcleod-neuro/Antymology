@@ -7,28 +7,30 @@ public class AntSelectorUI : MonoBehaviour
     [SerializeField] TMP_Dropdown antSelector; // Dropdown to select which ant to track
     [SerializeField] TrackingCameraScript trackingCamera; // Reference to the camera script to set the target
     
-    // List of all ant transforms
+    // List of all ant transforms - sorted with Queen first
     private List<Transform> allAnts = new List<Transform>();
 
-    void Start()
+    // Function to update the dropdown with all ants in the scene
+    public void UpdateAntSelector()
     {
-        // Wait for ants to be spawned before initializing
-        StartCoroutine(InitializeWhenAntsReady());
-    }
-
-    IEnumerator<WaitForSeconds> InitializeWhenAntsReady()
-    {
-        // Wait until we find ants in the scene
+        // Find all ants in the scene
         Ant[] antArray = FindObjectsOfType<Ant>();
 
-        // Wait until the number of ants matches the expected starting count
-        while (antArray.Length < ConfigurationManager.Instance.Starting_Ant_Count)
-        {
-            yield return new WaitForSeconds(0.1f);
-            antArray = FindObjectsOfType<Ant>();
-        }
+        // Clear the previous list and dropdown
+        allAnts.Clear();
+        if (antSelector != null)
+            antSelector.options.Clear();
 
-        // Now collect all ant transforms
+        // Sort ants so Queen is first, then workers
+        System.Array.Sort(antArray, (a, b) => {
+            bool aIsQueen = a is QueenAnt;
+            bool bIsQueen = b is QueenAnt;
+            if (aIsQueen && !bIsQueen) return -1;
+            if (!aIsQueen && bIsQueen) return 1;
+            return 0;
+        });
+
+        // Collect all ant transforms
         foreach (Ant ant in antArray)
         {
             allAnts.Add(ant.transform);
@@ -39,21 +41,18 @@ public class AntSelectorUI : MonoBehaviour
         {
             antSelector.onValueChanged.AddListener(OnAntSelected);
             
-            // Fill dropdown with ant names
+            // Fill dropdown with ant names (QueenAnt first, then Ant 2, Ant 3, etc.)
             List<string> antNames = new List<string>();
             for (int i = 0; i < allAnts.Count; i++)
             {
-                antNames.Add($"Ant {i + 1}");
+                if (i == 0)
+                    antNames.Add("QueenAnt");
+                else
+                    antNames.Add($"Ant {i + 1}");
             }
             antSelector.AddOptions(antNames);
             
-            // Select the first ant
-            if (allAnts.Count > 0 && trackingCamera != null)
-            {
-                trackingCamera.target = allAnts[0];
-            }
         }
-    }
 
     void OnAntSelected(int index)
     {
@@ -61,5 +60,6 @@ public class AntSelectorUI : MonoBehaviour
         {
             trackingCamera.target = allAnts[index];
         }
+    }
     }
 }

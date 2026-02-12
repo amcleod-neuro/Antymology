@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 2839620964973243937}
   - component: {fileID: 6476723387529590265}
   - component: {fileID: 7417753543611437415}
+  - component: {fileID: 1829891649480109260}
   m_Layer: 0
   m_Name: Ant
   m_TagString: Untagged
@@ -156,3 +157,16 @@ CapsuleCollider:
   m_Height: 0.1054
   m_Direction: 1
   m_Center: {x: 0.00795, y: 0, z: 0.05535}
+--- !u!114 &1829891649480109260
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3188329874420536128}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f3a0f353b7ea91489f67d1e07db434a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Ant
+  maxHealth: 100

@@ -17,6 +17,11 @@ namespace Antymology.Terrain
         public GameObject antPrefab;
 
         /// <summary>
+        /// The prefab for the queen ant.
+        /// </summary>
+        public GameObject QueenAntPrefab;
+
+        /// <summary>
         /// The material used for eech block.
         /// </summary>
         public Material blockMaterial;
@@ -108,15 +113,24 @@ namespace Antymology.Terrain
                 // Rotate ant -90 degrees on X-axis to orient it upright
                 Quaternion spawnRotation = Quaternion.Euler(-90, 0, 0);
 
-                // Spawn the first ant as the queen ant and the rest as worker ants
+                // Spawn the first ant as the queen ant and the rest as basic non-variant ants
                 if (i == 0)
                 {
-                    Instantiate(ConfigurationManager.Instance.QueenAntPrefab, spawnPos, spawnRotation);
+                    GameObject queenAnt = Instantiate(QueenAntPrefab, spawnPos, spawnRotation);
+                    queenAnt.name = "QueenAnt";
                 }
                 else
                 {
-                    Instantiate(ConfigurationManager.Instance.WorkerAntPrefab, spawnPos, spawnRotation);
+                    GameObject workerAnt = Instantiate(antPrefab, spawnPos, spawnRotation);
+                    workerAnt.name = $"Ant{i}";
                 }
+            }
+
+            // Update the ant selector UI with the new ants
+            AntSelectorUI antSelectorUI = FindObjectOfType<AntSelectorUI>();
+            if (antSelectorUI != null)
+            {
+                antSelectorUI.UpdateAntSelector();
             }
         }
 

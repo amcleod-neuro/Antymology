@@ -16,18 +16,6 @@ public class QueenAnt : Ant
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-        // Kill ant if health is dropped to zero
-        if (currentHealth <= 0)
-        {
-            Debug.Log("Ant has died.");
-            Destroy(gameObject);
-        }
-    }
-
     #region Actions
 
     // Function to place a nest block in front of the queen ant and remove her health accordingly

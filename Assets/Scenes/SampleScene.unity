@@ -683,6 +683,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   antPrefab: {fileID: 3188329874420536128, guid: d7780acb88adbf64ca50d4f1ada7577a,
     type: 3}
+  QueenAntPrefab: {fileID: 7155933095355257222, guid: 97d9770447f479048a7bd56d1a39f842,
+    type: 3}
   blockMaterial: {fileID: 2100000, guid: 4db9d8fce1a69b74f81daf1375c9ed88, type: 2}
 --- !u!4 &964896558
 Transform:
@@ -721,6 +723,8 @@ MonoBehaviour:
   Number_Of_Conatiner_Spheres: 5
   Conatiner_Sphere_Radius: 10
   Starting_Ant_Count: 100
+  Health_Gain_From_Mulch: 20
+  Health_Loss_Per_Second: 1
 --- !u!1 &1114743035
 GameObject:
   m_ObjectHideFlags: 0

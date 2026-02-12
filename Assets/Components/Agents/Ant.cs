@@ -22,6 +22,25 @@ public class Ant : MonoBehaviour
          InvokeRepeating(nameof(LoseHealth), 1f, 1f);
     }
 
+    // Update is called once per frame
+    void Update()
+    {
+
+        // Kill ant if health is dropped to zero
+        if (currentHealth <= 0)
+        {
+            Debug.Log("Ant has died.");
+            Destroy(gameObject);
+
+            // Update the ant selector UI with the new ants
+            AntSelectorUI antSelectorUI = FindObjectOfType<AntSelectorUI>();
+            if (antSelectorUI != null)
+            {
+                antSelectorUI.UpdateAntSelector();
+            }
+        }
+    }
+
     protected void UpdateAntsInBlock()
     {
         // Check that the block below the ant is the same as the block below the other ants to determine if they are in the same block
