@@ -27,6 +27,7 @@ public class QueenAnt : Ant
         if (CanPlaceNestBlock(blockInFront.worldXCoordinate, blockInFront.worldYCoordinate, blockInFront.worldZCoordinate))
         {
             Antymology.Terrain.WorldManager.Instance.SetBlock(blockInFront.worldXCoordinate, blockInFront.worldYCoordinate, blockInFront.worldZCoordinate, new Antymology.Terrain.NestBlock());
+            LogicScript.nestBlockCount++; // Increment the nest block count so the UI can update
             currentHealth -= maxHealth / 3f; // Reduce health by 1/3 of max health
         }
     }

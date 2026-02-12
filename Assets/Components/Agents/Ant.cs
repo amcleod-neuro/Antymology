@@ -114,6 +114,11 @@ public class Ant : MonoBehaviour
         {
             Antymology.Terrain.WorldManager.Instance.SetBlock(block.worldXCoordinate, block.worldYCoordinate, block.worldZCoordinate, new Antymology.Terrain.AirBlock());
             transform.position += new Vector3(0, -5, 0); // Move the ant down into the space where the block was but not too far to avoid clipping issues
+
+            if (block is Antymology.Terrain.NestBlock)
+            {
+                LogicScript.nestBlockCount--; // Decrement the nest block count so the UI can update (not optimal behaviour but possible)
+            }
         }
     }
 
