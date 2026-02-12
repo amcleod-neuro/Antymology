@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class Ant : MonoBehaviour
 {
@@ -7,9 +8,6 @@ public class Ant : MonoBehaviour
     private float currentHealth;
     public float healthLossPerSecond = 1;
     public float healthGainFromMulch = 20;
-
-    // Block coordinates below the ant
-    private Vector3Int blockBelow;
 
     // List to track ants in the same block
     private List<Ant> antsInBlock;
@@ -44,36 +42,31 @@ public class Ant : MonoBehaviour
     void LoseHealth()
     {
         currentHealth -= healthLossPerSecond;
-        Debug.Log("Ant health decreased to " + currentHealth);
+
+        if (Mathf.RoundToInt(currentHealth) % 10 == 0) // Log health every 10% health lost
+        {
+            Debug.Log("Ant health decreased to " + currentHealth);
+        }
     }
 
     void ChooseNextAction()
     {
-        // Store the coordinates of the block directly below the ant
-        Vector3 antPos = transform.position;
-        blockBelow = new Vector3Int(
-            Mathf.RoundToInt(antPos.x + 0.5f),
-            Mathf.RoundToInt(antPos.y) - 1,
-            Mathf.RoundToInt(antPos.z + 0.5f)
-        );
-
-        // Find all ants in the same air block
+        // Get the block below the ant
+        AbstractBlock blockBelowInstance = GetBlockBelow();
+        
+        // Find all ants at the same Y coordinate as the ant (same air block layer)
         antsInBlock = new List<Ant>();
         Ant[] allAnts = FindObjectsOfType<Ant>();
+        int antBlockY = Mathf.FloorToInt(transform.position.y);
+        
         foreach (Ant ant in allAnts)
         {
-            Vector3 otherAntPos = ant.transform.position;
-            int otherBlockX = Mathf.RoundToInt(otherAntPos.x + 0.5f);
-            int otherBlockZ = Mathf.RoundToInt(otherAntPos.z + 0.5f);
-            int otherBlockY = Mathf.RoundToInt(otherAntPos.y);
-
-            if (otherBlockX == blockBelow.x && otherBlockZ == blockBelow.z && otherBlockY == blockBelow.y + 1)
+            int otherBlockY = Mathf.FloorToInt(ant.transform.position.y);
+            if (otherBlockY == antBlockY)
             {
                 antsInBlock.Add(ant);
             }
         }
-
-
     }
 
     void MoveAnt()
@@ -84,32 +77,67 @@ public class Ant : MonoBehaviour
     // Function to eat mulch and gain health
     void EatMulch(int worldX, int worldY, int worldZ)
     {
-        // Check if block is mulch and remove it
-        Antymology.Terrain.AbstractBlock block = Antymology.Terrain.WorldManager.Instance.GetBlock(worldX, worldY, worldZ);
-        if (block is Antymology.Terrain.MulchBlock)
+        // Get the block below the ant to see if there is mulch to eat
+        AbstractBlock block = GetBlockBelow();
+        
+        if (CanEatBlock(block))
         {
             Antymology.Terrain.WorldManager.Instance.SetBlock(worldX, worldY, worldZ, new Antymology.Terrain.AirBlock());
+            // Increase health but do not exceed max health
+            currentHealth = Mathf.Min(currentHealth + healthGainFromMulch, maxHealth);
+            Debug.Log("Ant ate mulch. Health increased to " + currentHealth);
         }
-        // Increase health but do not exceed max health
-        currentHealth = Mathf.Min(currentHealth + healthGainFromMulch, maxHealth);
-        Debug.Log("Ant ate mulch. Health increased to " + currentHealth);
     }
     #endregion
 
     #region Logic Checks
 
-    // Checks if the block below is mulch and no other ants are currently also on it
-    bool CanEatMulch(int worldX, int worldY, int worldZ, List<Ant> antsHere)
+    // Checks if a block is mulch and no other ants are currently also trying to eat it
+    bool CanEatBlock(AbstractBlock block)
     {
-        Antymology.Terrain.AbstractBlock block = Antymology.Terrain.WorldManager.Instance.GetBlock(worldX, worldY, worldZ);
         if (!(block is Antymology.Terrain.MulchBlock))
             return false;
         
         // If there are other ants here, we can't eat the mulch
-        else if (antsHere.Count > 1)
+        if (antsInBlock.Count > 1)
             return false;
-        else
-            return true;
+            
+        return true;
+    }
+
+    bool CanMoveForward()
+    {
+        return true; // Placeholder for movement logic
+    }
+
+    #endregion
+
+    #region Utility
+
+    // Function to get the block in front of the ant based on its current rotation
+    AbstractBlock GetBlockInFront()
+    {
+        Vector3 antPos = transform.position;
+        
+        // Get the ant's forward-facing direction based on its rotation
+        Vector3 forwardDir = transform.forward;
+        Vector3 blockInFrontPos = antPos + (forwardDir * 5f); // Multiplies forward direction by 5 to ensure we get the block in front of the ant, not the block it's currently in
+        int x = Mathf.FloorToInt(blockInFrontPos.x);
+        int y = Mathf.FloorToInt(blockInFrontPos.y);
+        int z = Mathf.FloorToInt(blockInFrontPos.z);
+
+        return Antymology.Terrain.WorldManager.Instance.GetBlock(x, y, z);
+    }
+
+    // Function to get the block directly below the ant
+    AbstractBlock GetBlockBelow()
+    {
+        Vector3 antPos = transform.position;
+        int x = Mathf.FloorToInt(antPos.x);
+        int y = Mathf.FloorToInt(antPos.y) - 1;
+        int z = Mathf.FloorToInt(antPos.z);
+
+        return Antymology.Terrain.WorldManager.Instance.GetBlock(x, y, z);
     }
 
     #endregion
