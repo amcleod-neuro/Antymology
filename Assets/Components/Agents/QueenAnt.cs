@@ -2,6 +2,10 @@ using UnityEngine;
 
 public class QueenAnt : Ant
 {
+
+    // Flag to indicate queen is in an emergency state
+    public bool emergencySignal = false;
+
     void Awake()
     {
         // Load and apply the queen ant material
@@ -30,6 +34,18 @@ public class QueenAnt : Ant
             LogicScript.nestBlockCount++; // Increment the nest block count so the UI can update
             currentHealth -= maxHealth / 3f; // Reduce health by 1/3 of max health
         }
+    }
+
+    // Function to turn on the emergency signal that other ants can detect
+    void TurnOnEmergencySignal()
+    {
+        emergencySignal = true;
+    }
+
+    // Function to turn off the emergency signal that other ants can detect
+    void TurnOffEmergencySignal()
+    {
+        emergencySignal = false;
     }
 
     #endregion

@@ -10,6 +10,9 @@ public class Ant : MonoBehaviour
     // List to track ants in the same block
     protected List<Ant> antsInBlock;
 
+    // Float to track distance to the queen
+    protected float distanceToQueen;
+
     #region Basics
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -26,6 +29,10 @@ public class Ant : MonoBehaviour
     void Update()
     {
 
+        // Update useful information for the ant to make decisions based on its surroundings and the queen's location
+        UpdateAntsInBlock();
+        GetDistanceToQueen();
+        
         // Kill ant if health is dropped to zero
         if (currentHealth <= 0)
         {
@@ -60,6 +67,16 @@ public class Ant : MonoBehaviour
         }
     }
 
+    // Function to get the distance to the queen ant, which can be used by other ants to make decisions based on how close they are to the queen
+    protected void GetDistanceToQueen()
+    {
+        QueenAnt queen = FindObjectOfType<QueenAnt>();
+        if (queen != null)
+        {
+            distanceToQueen = Vector3.Distance(transform.position, queen.transform.position);
+        }
+    }
+
     #endregion
 
     #region Actions
@@ -82,9 +99,21 @@ public class Ant : MonoBehaviour
 
     }
 
+    // Function to move the ant forward if possible
     protected void MoveAnt()
     {
-        // Placeholder for movement
+        // Checks that the ant can move forward (checks blocks in front and above)
+        if (CanMoveForward())
+        {
+            Block blockInFront = GetBlockInFront();
+            transform.position += transform.forward * 8; // Move the ant forward by 8 units (one block width)
+        }
+    }
+
+    // Function to rotate the ant 90 degrees to the right
+    protected void RotateRight()
+    {
+        transform.Rotate(0, 90, 0);
     }
 
     // Function to eat mulch and gain health
