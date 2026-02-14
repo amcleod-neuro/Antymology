@@ -17,7 +17,7 @@ public class Ant : MonoBehaviour
     public List<Ant> antsInBlock;
 
     // Float to track distance to the queen
-    public float distanceToQueen = 1000f; // Start with a default max distance
+    public float distanceToQueen = 100f; // Start with a default max distance
 
     // Vector to track direction to queen for decision making
     public Vector3 directionToQueen = Vector3.zero;
@@ -37,15 +37,13 @@ public class Ant : MonoBehaviour
          currentHealth = maxHealth;
          Debug.Log(gameObject.name + " health set to " + currentHealth);
 
-            // Set up Rigidbody for movement if it exists, and set interpolation and collision detection for smoother movement and better physics interactions, and freeze rotation to prevent ants from tipping over
+            // Set up Rigidbody for movement if it exists, and set interpolation and collision detection for smoother movement and better physics interactions
             rb = GetComponent<Rigidbody>();
                 antCollider = GetComponent<Collider>();
             if (rb != null)
             {
                rb.interpolation = RigidbodyInterpolation.Interpolate;
                rb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
-               rb.freezeRotation = true;
-               rb.useGravity = true; // Need gravity for falling into world and over gaps
             }
 
          // Triggers health loss to be repeated every second
@@ -110,7 +108,7 @@ public class Ant : MonoBehaviour
             distanceToQueen = Vector3.Distance(transform.position, queen.transform.position);
         }else
         {
-            distanceToQueen = 1000f; // If for some reason the queen doesn't exist, return a default max distance
+            distanceToQueen = 100f; // If for some reason the queen doesn't exist, return a default max distance
         }
     }
 
@@ -243,7 +241,7 @@ public class Ant : MonoBehaviour
             rb.MoveRotation(target);
         }
         transform.rotation = target;
-        RotateFacingRight();
+        // Update gridFacing based on new rotation
         SyncGridFacingFromTransform();
     }
 
@@ -257,7 +255,7 @@ public class Ant : MonoBehaviour
             rb.MoveRotation(target);
         }
         transform.rotation = target;
-        RotateFacingLeft();
+        // Update gridFacing based on new rotation
         SyncGridFacingFromTransform();
     }
 
@@ -419,7 +417,7 @@ public class Ant : MonoBehaviour
 
     #region Logic Checks
 
-    // Checks if a block is mulch and no other ants are currently also trying to eat it
+    // Function to check if a block is mulch and no other ants are currently also trying to eat it
     protected bool CanEatBlock(AbstractBlock block)
     {
         if (!(block is Antymology.Terrain.MulchBlock))
@@ -504,83 +502,105 @@ public class Ant : MonoBehaviour
         return Antymology.Terrain.WorldManager.Instance.GetBlock(coords.x, coords.y, coords.z);
     }
 
+    // Function to convert the ant's world position to block grid coordinates for the block directly below the ant.
     public Vector3Int GetBlockBelowCoords()
     {
         Vector3 antPos = transform.position;
+        
+        // FloorToInt converts world position to grid coordinates
+        // Example: ant at x=5.7 is in block x=5 (blocks span from integer to integer+1)
         int x = Mathf.FloorToInt(antPos.x);
         int z = Mathf.FloorToInt(antPos.z);
+        
+        // For Y, we use the bottom of the collider (where the ant's feet are)
+        // antCollider.bounds.min.y gives us the lowest point of the collider
+        // If no collider exists, estimate feet position as 0.5 units below center
         float baseY = antCollider != null ? antCollider.bounds.min.y : antPos.y - 0.5f;
-        int y = Mathf.FloorToInt(baseY - 0.1f); // Increased safety margin
+        
+        // Subtract 0.1f safety margin before flooring to ensure we're detecting the block we're standing ON
+        // Without this, an ant exactly at y=5.0 might detect the block above instead of below
+        int y = Mathf.FloorToInt(baseY - 0.1f);
+        
         return new Vector3Int(x, y, z);
     }
 
+    // Function to get the coordinates of the block in front of the ant at foot/ground level (1 block above current floor).
+    // Used to check if the ant can step forward onto a block at the same height.
     public Vector3Int GetBlockInFrontCoords()
     {
-        Vector3Int below = GetBlockBelowCoords();
-        Vector3Int step = GetForwardStep();
+        Vector3Int below = GetBlockBelowCoords(); // Start from current position
+        Vector3Int step = GetForwardStep(); // Get direction ant is facing (e.g., (1,0,0) for east)
+        // Move forward in facing direction and up 1 block (to check foot-level of destination)
         return new Vector3Int(below.x + step.x, below.y + 1, below.z + step.z);
     }
 
+    // Function to get the coordinates of the block one forward and two blocks above the current floor.
     public Vector3Int GetBlockAboveAndInFrontCoords()
     {
         Vector3Int below = GetBlockBelowCoords();
         Vector3Int step = GetForwardStep();
+        // Move forward and up 2 blocks to check head clearance
         return new Vector3Int(below.x + step.x, below.y + 2, below.z + step.z);
     }
 
+    // Function to get the coordinates of the block one forward and three blocks above the current floor.
     public Vector3Int GetBlockTwoAboveAndInFrontCoords()
     {
         Vector3Int below = GetBlockBelowCoords();
         Vector3Int step = GetForwardStep();
+        // Move forward and up 3 blocks to check clearance above a step-up
         return new Vector3Int(below.x + step.x, below.y + 3, below.z + step.z);
     }
 
+    // Function to get the grid direction the ant is currently facing.
+    // Example: (1,0,0) = East, (-1,0,0) = West, (0,0,1) = North, (0,0,-1) = South
     private Vector3Int GetForwardStep()
     {
         return gridFacing;
     }
 
+    // Function to convert the ant's 3D rotation into a discrete grid direction.
+    // This ensures movement is always aligned to the block grid (North/South/East/West only).
+    // Called after any rotation to keep gridFacing in sync with visual rotation.
     private void SyncGridFacingFromTransform()
     {
+        // Transform model's local forward direction to world space
+        // modelForwardLocal is the direction the 3D model considers "forward" in its own coordinate system
         Vector3 forward = transform.TransformDirection(modelForwardLocal).normalized;
+        
+        // Determine if ant is facing more along X axis or Z axis
         if (Mathf.Abs(forward.x) > Mathf.Abs(forward.z))
         {
+            // Facing is primarily along X axis (East or West)
+            // Get sign of X component: positive = East (+1), negative = West (-1)
             int sx = Mathf.RoundToInt(Mathf.Sign(forward.x));
+            // Safety check: if somehow we got 0, default to East (1)
             gridFacing = new Vector3Int(sx == 0 ? 1 : sx, 0, 0);
             return;
         }
 
+        // Facing is primarily along Z axis (North or South)
+        // Get sign of Z component: positive = North (+1), negative = South (-1)
         int sz = Mathf.RoundToInt(Mathf.Sign(forward.z));
+        // Safety check: if somehow we got 0, default to North (1)
         gridFacing = new Vector3Int(0, 0, sz == 0 ? 1 : sz);
     }
 
-    private void RotateFacingRight()
-    {
-        int x = gridFacing.x;
-        int z = gridFacing.z;
-        gridFacing = new Vector3Int(z, 0, -x);
-    }
-
-    private void RotateFacingLeft()
-    {
-        int x = gridFacing.x;
-        int z = gridFacing.z;
-        gridFacing = new Vector3Int(-z, 0, x);
-    }
-
+    // Function to get the vertical distance from the ant's center to its feet (half of total height).
+    // Used when positioning the ant to ensure feet are at the correct height on top of blocks.
     private float GetStandHeight()
     {
-        if (antCollider == null)
-            return 1f;
-
+        // bounds.extents.y is half the height of the collider
         return antCollider.bounds.extents.y;
     }
 
+    // Function to check if the ant is currently standing on solid ground using a downward raycast.
+    // Returns true if ground is detected within a small distance below the ant.
+    // Helps detect if the ant is falling or floating due to physics issues.
     public bool IsGrounded()
     {
-        if (antCollider == null)
-            return Physics.Raycast(transform.position, Vector3.down, 1.1f);
-
+        // shoot ray from center of collider bounds to detect ground below
+        // Ray length is ant's half-height plus small buffer (0.05f)
         float rayLength = antCollider.bounds.extents.y + 0.05f;
         return Physics.Raycast(antCollider.bounds.center, Vector3.down, rayLength);
     }
