@@ -193,10 +193,17 @@ namespace Antymology.Terrain
         /// </summary>
         public void ResetWorldForNewEpisode()
         {
-            // Destroy all existing chunks
+            // Destroy all existing chunks (GameObjects)
             foreach (Transform child in transform)
             {
                 Destroy(child.gameObject);
+            }
+
+            // Destroy all existing ants
+            Ant[] existingAnts = FindObjectsOfType<Ant>();
+            foreach (Ant ant in existingAnts)
+            {
+                Destroy(ant.gameObject);
             }
 
             // Regenerate the terrain data and chunks
