@@ -51,6 +51,11 @@ namespace Antymology.Terrain
         /// </summary>
         private Vector3 SpawnPoint;
 
+        /// <summary>
+        /// Parent for the chunks objects so they can be destroyed between episodes
+        /// </summary>
+        private GameObject chunksParent;
+
         #endregion
 
         #region Initialization
@@ -194,10 +199,7 @@ namespace Antymology.Terrain
         public void ResetWorldForNewEpisode()
         {
             // Destroy all existing chunks (GameObjects)
-            foreach (Transform child in transform)
-            {
-                Destroy(child.gameObject);
-            }
+            Destroy(chunksParent);
 
             // Destroy all existing ants
             Ant[] existingAnts = FindObjectsOfType<Ant>();
@@ -206,11 +208,16 @@ namespace Antymology.Terrain
                 Destroy(ant.gameObject);
             }
 
-            // Reinitialize the Blocks array to clear all old data (eaten mulch, dug blocks, etc.)
+            // Reinitialize both Blocks and Chunks arrays to clear all old data
             Blocks = new AbstractBlock[
                 ConfigurationManager.Instance.World_Diameter * ConfigurationManager.Instance.Chunk_Diameter,
                 ConfigurationManager.Instance.World_Height * ConfigurationManager.Instance.Chunk_Diameter,
                 ConfigurationManager.Instance.World_Diameter * ConfigurationManager.Instance.Chunk_Diameter];
+
+            Chunks = new Chunk[
+                ConfigurationManager.Instance.World_Diameter,
+                ConfigurationManager.Instance.World_Height,
+                ConfigurationManager.Instance.World_Diameter];
 
             // Regenerate fresh terrain data
             GenerateData();
@@ -523,14 +530,20 @@ namespace Antymology.Terrain
         /// </summary>
         private void GenerateChunks()
         {
-            GameObject chunkObg = new GameObject("Chunks");
+            // Destroy previous chunks container if it exists
+            if (chunksParent != null)
+            {
+                Destroy(chunksParent); // Use Destroy in runtime
+            }
+
+            chunksParent = new GameObject("Chunks");
 
             for (int x = 0; x < Chunks.GetLength(0); x++)
                 for (int z = 0; z < Chunks.GetLength(2); z++)
                     for (int y = 0; y < Chunks.GetLength(1); y++)
                     {
                         GameObject temp = new GameObject();
-                        temp.transform.parent = chunkObg.transform;
+                        temp.transform.parent = chunksParent.transform;
                         temp.transform.position = new Vector3
                         (
                             x * ConfigurationManager.Instance.Chunk_Diameter - 0.5f,
