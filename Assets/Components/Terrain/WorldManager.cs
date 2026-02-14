@@ -84,6 +84,22 @@ namespace Antymology.Terrain
         /// </summary>
         private void Start()
         {
+            // Set time scale for training mode to accelerate simulation
+            if (ConfigurationManager.Instance.Training_Mode)
+            {
+                Time.timeScale = ConfigurationManager.Instance.Training_Time_Scale;
+                // Disable VSync for maximum speed
+                QualitySettings.vSyncCount = 0;
+                // Set high target framerate to prevent throttling
+                Application.targetFrameRate = -1; // Unlimited
+                Debug.Log($"Training Mode enabled: Time.timeScale = {Time.timeScale}x");
+            }
+            else
+            {
+                Time.timeScale = 1f;
+                Debug.Log("Normal Mode: Time.timeScale = 1x");
+            }
+
             GenerateData();
             GenerateChunks();
 

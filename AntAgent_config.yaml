@@ -2,8 +2,8 @@ behaviors:
   AntBehaviour:
     trainer_type: ppo
     hyperparameters:
-      batch_size: 1024
-      buffer_size: 10240
+      batch_size: 2048
+      buffer_size: 20480
       learning_rate: 0.0003
       beta: 0.005
       epsilon: 0.2
@@ -19,16 +19,17 @@ behaviors:
       extrinsic:
         gamma: 0.99
         strength: 1.0
-    keep_checkpoints: 5
-    max_steps: 5000000
+    keep_checkpoints: 15
+    checkpoint_interval: 50000
+    max_steps: 1000000
     time_horizon: 1000
     summary_freq: 10000
 
   QueenAntBehaviour:
     trainer_type: ppo
     hyperparameters:
-      batch_size: 512
-      buffer_size: 5120
+      batch_size: 1024
+      buffer_size: 10240
       learning_rate: 0.0003
       beta: 0.01
       epsilon: 0.2
@@ -44,8 +45,9 @@ behaviors:
       extrinsic:
         gamma: 0.99
         strength: 1.0
-    keep_checkpoints: 5
-    max_steps: 5000000
+    keep_checkpoints: 15
+    checkpoint_interval: 50000
+    max_steps: 1000000
     time_horizon: 1000
     summary_freq: 10000
 

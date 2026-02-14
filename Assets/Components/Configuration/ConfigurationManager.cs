@@ -64,4 +64,18 @@ public class ConfigurationManager : Singleton<ConfigurationManager>
     /// The amount of health lost per second for ants.
     /// </summary>
     public float Health_Loss_Per_Second = 1f;
+
+    /// <summary>
+    /// Training mode accelerates simulation for faster ML training.
+    /// When enabled, sets Time.timeScale to Training_Time_Scale.
+    /// Toggle this on during ML training, off during normal gameplay.
+    /// </summary>
+    public bool Training_Mode = false;
+
+    /// <summary>
+    /// Time scale multiplier when Training_Mode is enabled.
+    /// Higher values = faster simulation. Recommended: 10-100 for training.
+    /// Note: Physics can become unstable above ~20x, test to find optimal value.
+    /// </summary>
+    public float Training_Time_Scale = 20f;
 }
