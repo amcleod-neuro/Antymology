@@ -78,6 +78,29 @@ public class Ant : MonoBehaviour
                 antSelectorUI.UpdateAntSelector();
             }
         }
+
+        // Kill ant if it falls too far below the world (y < -200)
+        if (transform.position.y < -200f)
+        {
+            Debug.Log(gameObject.name + " has fallen too far and died. Position: " + transform.position.y);
+            
+            // Apply penalty reward to the agent to discourage this behavior
+            AntAgent antAgent = GetComponent<AntAgent>();
+            if (antAgent != null)
+            {
+                antAgent.AddReward(-1.0f); // Significant penalty for falling to death
+            }
+            
+            // Destroy the ant
+            Destroy(gameObject);
+
+            // Update the ant selector UI with the new ants
+            AntSelectorUI antSelectorUI = FindObjectOfType<AntSelectorUI>();
+            if (antSelectorUI != null)
+            {
+                antSelectorUI.UpdateAntSelector();
+            }
+        }
     }
 
     protected void UpdateAntsInBlock()

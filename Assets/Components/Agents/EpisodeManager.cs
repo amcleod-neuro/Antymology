@@ -32,7 +32,8 @@ public class EpisodeManager : MonoBehaviour
         {
             if (FindObjectOfType<AntAgent>() != null || FindObjectOfType<QueenAgent>() != null)
             {
-                ResetEpisode();
+                // Initialize episode from existing spawned ants WITHOUT resetting the world
+                InitializeEpisode();
                 episodeInitialized = true;
             }
             return;
@@ -53,13 +54,36 @@ public class EpisodeManager : MonoBehaviour
         }
     }
 
+    private void InitializeEpisode()
+    {
+        episodeStartTime = Time.time;
+        nestBlocksPlacedThisEpisode = 0;
+        lastNestBlockRewardTime = Time.time;
+
+        // Find queen agent
+        queenAgent = FindObjectOfType<QueenAgent>();
+        if (queenAgent != null)
+        {
+            queenAgent.OnEpisodeBegin();
+        }
+
+        // Find all worker ants
+        workerAnts = new List<AntAgent>(FindObjectsOfType<AntAgent>());
+        foreach (AntAgent ant in workerAnts)
+        {
+            ant.OnEpisodeBegin();
+        }
+
+        Debug.Log($"Episode started with {workerAnts.Count} worker ants and 1 queen");
+    }
+
     private void ResetEpisode()
     {
         episodeStartTime = Time.time;
         nestBlocksPlacedThisEpisode = 0;
         lastNestBlockRewardTime = Time.time;
 
-        // Reset the world for a fresh episode
+        // Reset the world for a fresh episode (only called after first episode ends)
         Antymology.Terrain.WorldManager.Instance.ResetWorldForNewEpisode();
 
         // Find queen agent
@@ -99,8 +123,8 @@ public class EpisodeManager : MonoBehaviour
             ant.EndEpisode();
         }
 
-        // Wait for new ants to spawn before reinitializing
-        episodeInitialized = false;
+        // Reset the world and spawn new ants for the next episode
+        ResetEpisode();
     }
 
     /// <summary>

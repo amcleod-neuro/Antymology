@@ -336,10 +336,11 @@ namespace Antymology.Terrain
 
                     if (ConfigurationManager.Instance.Training_Mode)
                     {
-                        // Use original fine-tuned parameters but reduce base height to create more air space
+                        // Use original fine-tuned parameters but reduce base height to create playable space
+                        // Still need enough stone base volume to prevent fall-through gaps
                         stoneCeiling = SimplexNoise.GetPerlinNoise(x, 0, z, 10, 3, 1.2) +
                                        SimplexNoise.GetPerlinNoise(x, 300, z, 20, 4, 0) +
-                                       2;  // Reduced from 10 to create more playable space
+                                       5;  // Reduced from 10 but raised from 2 to prevent fall-through
                         grassHeight = SimplexNoise.GetPerlinNoise(x, 100, z, 30, 10, 0);
                         foodHeight = SimplexNoise.GetPerlinNoise(x, 200, z, 20, 5, 1.5);
                     }
