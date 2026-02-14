@@ -464,6 +464,65 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Mask
   m_ShowMaskGraphic: 0
+--- !u!1 &692547240
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 692547242}
+  - component: {fileID: 692547241}
+  m_Layer: 0
+  m_Name: ConfigurationManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &692547241
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 692547240}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8d15e78258e4f2419b563e068e6f42d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ConfigurationManager
+  Seed: 1337
+  World_Diameter: 4
+  World_Height: 2
+  Chunk_Diameter: 8
+  Tile_Map_Unit_Ratio: 0.25
+  Number_Of_Acidic_Regions: 1
+  Acidic_Region_Radius: 5
+  Number_Of_Conatiner_Spheres: 5
+  Conatiner_Sphere_Radius: 20
+  Starting_Ant_Count: 5
+  Health_Gain_From_Mulch: 20
+  Health_Loss_Per_Second: 1
+  Training_Mode: 1
+  Training_Time_Scale: 20
+  Episode_Reset_Timeout: 60
+--- !u!4 &692547242
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 692547240}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 76, y: -2610.1235, z: 80.0159}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -727,6 +786,7 @@ MonoBehaviour:
   Health_Loss_Per_Second: 1
   Training_Mode: 1
   Training_Time_Scale: 20
+  Episode_Reset_Timeout: 60
 --- !u!1 &1114743035
 GameObject:
   m_ObjectHideFlags: 0
@@ -2109,3 +2169,4 @@ SceneRoots:
   - {fileID: 909079585}
   - {fileID: 1592725962}
   - {fileID: 1640142312}
+  - {fileID: 692547242}

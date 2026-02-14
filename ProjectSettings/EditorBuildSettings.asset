@@ -8,4 +8,6 @@ EditorBuildSettings:
   m_configObjects:
     com.unity.dt.app-ui: {fileID: 11400000, guid: 1b1c20d82303e4b5781c3ef50ac1449f,
       type: 2}
+    com.unity.ml-agents.settings: {fileID: 11400000, guid: e2f50b3513b72b648a469cf4e111a086,
+      type: 2}
   m_UseUCBPForAssetBundles: 0

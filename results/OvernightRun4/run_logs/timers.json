@@ -1,0 +1,42 @@
+{
+    "name": "root",
+    "metadata": {
+        "timer_format_version": "0.1.0",
+        "start_time_seconds": "1771054814",
+        "python_version": "3.10.12 | packaged by Anaconda, Inc. | (main, Jul  5 2023, 19:01:18) [MSC v.1916 64 bit (AMD64)]",
+        "command_line_arguments": "C:\\Users\\alecf\\miniconda3\\envs\\mlagents\\Scripts\\mlagents-learn AntAgent_config.yaml --run-id=OvernightRun4",
+        "mlagents_version": "1.1.0",
+        "mlagents_envs_version": "1.1.0",
+        "communication_protocol_version": "1.5.0",
+        "pytorch_version": "2.2.2+cu121",
+        "numpy_version": "1.23.5",
+        "end_time_seconds": "1771054933"
+    },
+    "total": 118.70465559999866,
+    "count": 1,
+    "self": 0.07428350000554929,
+    "children": {
+        "run_training.setup": {
+            "total": 0.2726784999977099,
+            "count": 1,
+            "self": 0.2726784999977099
+        },
+        "TrainerController.start_learning": {
+            "total": 118.3576935999954,
+            "count": 1,
+            "self": 0.0024051000000326894,
+            "children": {
+                "TrainerController._reset_env": {
+                    "total": 118.35429029999796,
+                    "count": 1,
+                    "self": 118.35429029999796
+                },
+                "TrainerController._save_models": {
+                    "total": 0.0009981999974115752,
+                    "count": 1,
+                    "self": 0.0009981999974115752
+                }
+            }
+        }
+    }
+}

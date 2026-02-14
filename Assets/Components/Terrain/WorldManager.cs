@@ -117,8 +117,8 @@ namespace Antymology.Terrain
         {
             for (int i = 0; i < ConfigurationManager.Instance.Starting_Ant_Count; i++)
             {
-                float jitterX = (float)(RNG.NextDouble() - 0.5) * 4f; // ±2 units
-                float jitterZ = (float)(RNG.NextDouble() - 0.5) * 4f; // ±2 units
+                float jitterX = (float)(RNG.NextDouble() - 0.5) * 2f; // ±1 unit
+                float jitterZ = (float)(RNG.NextDouble() - 0.5) * 2f; // ±1 unit
 
                 float worldX = SpawnPoint.x - 0.5f + jitterX;
                 float worldZ = SpawnPoint.z - 0.5f + jitterZ;
@@ -303,7 +303,12 @@ namespace Antymology.Terrain
         {
             GeneratePreliminaryWorld();
             GenerateAcidicRegions();
-            GenerateSphericalContainers();
+            
+            if (!ConfigurationManager.Instance.Training_Mode)
+            {
+                // Skip container spheres in training mode to maximize playable space
+                GenerateSphericalContainers();
+            }
         }
 
         /// <summary>
@@ -318,11 +323,28 @@ namespace Antymology.Terrain
                      * These numbers have been fine-tuned and tweaked through trial and error.
                      * Altering these numbers may produce weird looking worlds.
                      **/
-                    int stoneCeiling = SimplexNoise.GetPerlinNoise(x, 0, z, 10, 3, 1.2) +
+                    int stoneCeiling;
+                    int grassHeight;
+                    int foodHeight;
+
+                    if (ConfigurationManager.Instance.Training_Mode)
+                    {
+                        // Use original fine-tuned parameters but reduce base height to create more air space
+                        stoneCeiling = SimplexNoise.GetPerlinNoise(x, 0, z, 10, 3, 1.2) +
+                                       SimplexNoise.GetPerlinNoise(x, 300, z, 20, 4, 0) +
+                                       2;  // Reduced from 10 to create more playable space
+                        grassHeight = SimplexNoise.GetPerlinNoise(x, 100, z, 30, 10, 0);
+                        foodHeight = SimplexNoise.GetPerlinNoise(x, 200, z, 20, 5, 1.5);
+                    }
+                    else
+                    {
+                        // Original fine-tuned settings for full-size world
+                        stoneCeiling = SimplexNoise.GetPerlinNoise(x, 0, z, 10, 3, 1.2) +
                                        SimplexNoise.GetPerlinNoise(x, 300, z, 20, 4, 0) +
                                        10;
-                    int grassHeight = SimplexNoise.GetPerlinNoise(x, 100, z, 30, 10, 0);
-                    int foodHeight = SimplexNoise.GetPerlinNoise(x, 200, z, 20, 5, 1.5);
+                        grassHeight = SimplexNoise.GetPerlinNoise(x, 100, z, 30, 10, 0);
+                        foodHeight = SimplexNoise.GetPerlinNoise(x, 200, z, 20, 5, 1.5);
+                    }
 
                     for (int y = 0; y < Blocks.GetLength(1); y++)
                     {
@@ -342,15 +364,21 @@ namespace Antymology.Terrain
                         {
                             Blocks[x, y, z] = new AirBlock();
                         }
-                        if
-                        (
-                            x == 0 ||
-                            x >= Blocks.GetLength(0) - 1 ||
-                            z == 0 ||
-                            z >= Blocks.GetLength(2) - 1 ||
-                            y == 0
-                        )
+                        
+                        // Place container blocks as world boundaries
+                        if (y == 0)
+                        {
+                            // Always place container floor to prevent falling through
                             Blocks[x, y, z] = new ContainerBlock();
+                        }
+                        else if (!ConfigurationManager.Instance.Training_Mode)
+                        {
+                            // In normal mode, place containers on all boundaries
+                            if (x == 0 || x >= Blocks.GetLength(0) - 1 || 
+                                z == 0 || z >= Blocks.GetLength(2) - 1)
+                                Blocks[x, y, z] = new ContainerBlock();
+                        }
+                        // In training mode, no containers on walls/ceiling - just the floor
                     }
                 }
         }
@@ -500,13 +528,7 @@ namespace Antymology.Terrain
                         chunkScript.y = y * ConfigurationManager.Instance.Chunk_Diameter;
                         chunkScript.z = z * ConfigurationManager.Instance.Chunk_Diameter;
                         chunkScript.Init(blockMaterial);
-                        
-                        // Only generate mesh visuals if not in training mode (saves performance during training)
-                        if (!ConfigurationManager.Instance.Training_Mode)
-                        {
-                            chunkScript.GenerateMesh();
-                        }
-                        
+                        chunkScript.GenerateMesh();
                         Chunks[x, y, z] = chunkScript;
                     }
         }
