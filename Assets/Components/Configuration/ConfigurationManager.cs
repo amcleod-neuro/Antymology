@@ -53,7 +53,7 @@ public class ConfigurationManager : Singleton<ConfigurationManager>
     /// <summary>
     /// The number of ants to spawn at the start of the game.
     /// </summary>
-    public int Starting_Ant_Count = 100;
+    public int Starting_Ant_Count = 25;
 
     /// <summary>
     /// The amount of health gained from mulch blocks.
@@ -78,4 +78,11 @@ public class ConfigurationManager : Singleton<ConfigurationManager>
     /// Note: Physics can become unstable above ~20x, test to find optimal value.
     /// </summary>
     public float Training_Time_Scale = 20f;
+
+    /// <summary>
+    /// Time in seconds to wait for episode reset before timing out.
+    /// If world generation takes longer than this, increase the value.
+    /// Default is 60 seconds, should be enough for most resets.
+    /// </summary>
+    public float Episode_Reset_Timeout = 60f;
 }

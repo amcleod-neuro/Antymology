@@ -141,6 +141,7 @@ MonoBehaviour:
   antsInBlock: []
   distanceToQueen: 1000
   directionToQueen: {x: 0, y: 0, z: 0}
+  modelForwardLocal: {x: 1, y: 0, z: 0}
   emergencySignal: 0
 --- !u!114 &-5538137809868806308
 MonoBehaviour:
@@ -183,7 +184,7 @@ MonoBehaviour:
     hasUpgradedBrainParametersWithActionSpec: 1
   m_Model: {fileID: 0}
   m_InferenceDevice: 0
-  m_BehaviorType: 1
+  m_BehaviorType: 0
   m_BehaviorName: QueenAntBehaviour
   TeamId: 0
   m_UseChildSensors: 1

@@ -188,6 +188,33 @@ namespace Antymology.Terrain
         }
 
         /// <summary>
+        /// Resets the world for a new episode by clearing all chunks and regenerating the terrain.
+        /// Called by EpisodeManager at the start of each new episode during training.
+        /// </summary>
+        public void ResetWorldForNewEpisode()
+        {
+            // Destroy all existing chunks
+            foreach (Transform child in transform)
+            {
+                Destroy(child.gameObject);
+            }
+
+            // Regenerate the terrain data and chunks
+            GenerateData();
+
+            // Update all chunks to reflect new terrain data
+            GenerateChunks();
+
+            // Find a new spawn location
+            FindSpawnPoint();
+
+            // Generate new ants at the new spawn location
+            GenerateAnts();
+
+            Debug.Log("World terrain reset for new episode");
+        }
+
+        /// <summary>
         /// Retrieves an abstract block type at the desired world coordinates.
         /// </summary>
         public AbstractBlock GetBlock(int WorldXCoordinate, int WorldYCoordinate, int WorldZCoordinate)
@@ -473,7 +500,13 @@ namespace Antymology.Terrain
                         chunkScript.y = y * ConfigurationManager.Instance.Chunk_Diameter;
                         chunkScript.z = z * ConfigurationManager.Instance.Chunk_Diameter;
                         chunkScript.Init(blockMaterial);
-                        chunkScript.GenerateMesh();
+                        
+                        // Only generate mesh visuals if not in training mode (saves performance during training)
+                        if (!ConfigurationManager.Instance.Training_Mode)
+                        {
+                            chunkScript.GenerateMesh();
+                        }
+                        
                         Chunks[x, y, z] = chunkScript;
                     }
         }

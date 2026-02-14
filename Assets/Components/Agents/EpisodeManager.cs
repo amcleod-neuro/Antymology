@@ -59,6 +59,9 @@ public class EpisodeManager : MonoBehaviour
         nestBlocksPlacedThisEpisode = 0;
         lastNestBlockRewardTime = Time.time;
 
+        // Reset the world for a fresh episode
+        Antymology.Terrain.WorldManager.Instance.ResetWorldForNewEpisode();
+
         // Find queen agent
         queenAgent = FindObjectOfType<QueenAgent>();
         if (queenAgent != null)
