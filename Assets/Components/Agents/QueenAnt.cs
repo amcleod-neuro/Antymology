@@ -1,5 +1,10 @@
 using UnityEngine;
 
+/// <summary>
+/// QueenAnt class represents the queen ant in the colony. 
+/// It inherits from Ant so it has all the same actions and logic checks, but can place nest blocks and has an emergency signal that worker ants can observe and react to.
+/// All actual agent-based behavior (observations, rewards, etc.) is handled in the QueenAgent subclass which holds a reference to this.
+/// </summary>
 public class QueenAnt : Ant
 {
 
@@ -23,7 +28,7 @@ public class QueenAnt : Ant
     #region Actions
 
     // Function to place a nest block in front of the queen ant and remove her health accordingly
-    void PlaceNestBlock()
+    public void PlaceNestBlock()
     {
         // Uses ant function to get the block in front of the queen
         AbstractBlock blockInFront = GetBlockInFront();
@@ -37,13 +42,13 @@ public class QueenAnt : Ant
     }
 
     // Function to turn on the emergency signal that other ants can detect
-    void TurnOnEmergencySignal()
+    public void TurnOnEmergencySignal()
     {
         emergencySignal = true;
     }
 
     // Function to turn off the emergency signal that other ants can detect
-    void TurnOffEmergencySignal()
+    public void TurnOffEmergencySignal()
     {
         emergencySignal = false;
     }
@@ -53,7 +58,7 @@ public class QueenAnt : Ant
     #region Logic
 
     // Check that the block in front of the queen is air and she has enough health to place down a nest block
-    bool CanPlaceNestBlock(int x, int y, int z)
+    public bool CanPlaceNestBlock(int x, int y, int z)
     {
         // Checks if the block in front is an air block
         AbstractBlock blockInFront = GetBlockInFront();
@@ -65,6 +70,46 @@ public class QueenAnt : Ant
             return false;
         
         return true;
+    }
+
+    // Get distance to the nearest worker ant
+    public float GetDistanceToNearestWorkerAnt()
+    {
+        Ant[] allAnts = FindObjectsOfType<Ant>();
+        float nearestDistance = float.MaxValue;
+
+        foreach (Ant ant in allAnts)
+        {
+            // Skip self and other queen agents
+            if (ant == this || ant is QueenAgent)
+                continue;
+
+            float distance = Vector3.Distance(transform.position, ant.transform.position);
+            if (distance < nearestDistance)
+            {
+                nearestDistance = distance;
+            }
+        }
+
+        return nearestDistance == float.MaxValue ? 100f : nearestDistance;
+    }
+
+    // Count how many worker ants are still alive
+    public int CountWorkerAntsAlive()
+    {
+        Ant[] allAnts = FindObjectsOfType<Ant>();
+        int count = 0;
+
+        foreach (Ant ant in allAnts)
+        {
+            // Skip self and other queen agents
+            if (ant == this || ant is QueenAgent)
+                continue;
+
+            count++;
+        }
+
+        return count;
     }
 
     #endregion

@@ -1,0 +1,29 @@
+{
+    "AntBehaviour": {
+        "checkpoints": [
+            {
+                "steps": 99000,
+                "file_path": "results\\ColonyV2\\AntBehaviour\\AntBehaviour-99000.onnx",
+                "reward": null,
+                "creation_time": 1771035489.9287462,
+                "auxillary_file_paths": [
+                    "results\\ColonyV2\\AntBehaviour\\AntBehaviour-99000.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 99000,
+            "file_path": "results\\ColonyV2\\AntBehaviour.onnx",
+            "reward": null,
+            "creation_time": 1771035489.9287462,
+            "auxillary_file_paths": [
+                "results\\ColonyV2\\AntBehaviour\\AntBehaviour-99000.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "1.1.0",
+        "torch_version": "2.2.2+cu121"
+    }
+}

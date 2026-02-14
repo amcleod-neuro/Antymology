@@ -1,17 +1,28 @@
 using UnityEngine;
 using System.Collections.Generic;
 
+/// <summary>
+/// Ant class represents a basic ant in the colony with health, the ability to move, eat mulch, dig blocks, and give health to other ants.
+/// All actual agent-based behavior (observations, rewards, etc.) is handled in the AntAgent subclass which holds a reference to this.
+/// </summary>
 public class Ant : MonoBehaviour
 {
     // Public variables to be modified and protected variables to track health
     public float maxHealth = 100;
-    protected float currentHealth;
+
+    // Current health of the ant, which has to be initialized so the ML works (if at 0, it thinks all ants are instantly dead and ends the episode)
+    public float currentHealth = 100;
 
     // List to track ants in the same block
-    protected List<Ant> antsInBlock;
+    public List<Ant> antsInBlock;
 
     // Float to track distance to the queen
-    protected float distanceToQueen;
+    public float distanceToQueen = 1000f; // Start with a default max distance
+
+    // Vector to track direction to queen for decision making
+    public Vector3 directionToQueen = Vector3.zero;
+
+    
 
     #region Basics
 
@@ -32,7 +43,7 @@ public class Ant : MonoBehaviour
         // Update useful information for the ant to make decisions based on its surroundings and the queen's location
         UpdateAntsInBlock();
         GetDistanceToQueen();
-        
+        GetDirectionToQueen();
         // Kill ant if health is dropped to zero
         if (currentHealth <= 0)
         {
@@ -67,13 +78,30 @@ public class Ant : MonoBehaviour
         }
     }
 
-    // Function to get the distance to the queen ant, which can be used by other ants to make decisions based on how close they are to the queen
+    // Function to update the distance to the queen ant, which can be used by other ants to make decisions based on how close they are to the queen
     protected void GetDistanceToQueen()
     {
         QueenAnt queen = FindObjectOfType<QueenAnt>();
         if (queen != null)
         {
             distanceToQueen = Vector3.Distance(transform.position, queen.transform.position);
+        }else
+        {
+            distanceToQueen = 1000f; // If for some reason the queen doesn't exist, return a default max distance
+        }
+    }
+
+    // Function to update the direction to the queen ant, which can be used by other ants to move towards the queen or make decisions based on the queen's location
+    protected void GetDirectionToQueen()
+    {
+        QueenAnt queen = FindObjectOfType<QueenAnt>();
+        if (queen != null)
+        {
+            directionToQueen = (queen.transform.position - transform.position).normalized;
+        }
+        else
+        {
+            directionToQueen = Vector3.zero;
         }
     }
 
@@ -100,24 +128,56 @@ public class Ant : MonoBehaviour
     }
 
     // Function to move the ant forward if possible
-    protected void MoveAnt()
+    public void MoveAnt()
     {
         // Checks that the ant can move forward (checks blocks in front and above)
         if (CanMoveForward())
         {
-            Block blockInFront = GetBlockInFront();
-            transform.position += transform.forward * 8; // Move the ant forward by 8 units (one block width)
+            AbstractBlock blockInFront = GetBlockInFront();
+            // Use right vector for horizontal movement (transform.forward points down on the ant model)
+            Vector3 moveDir = transform.right * 8;
+            
+            // Checks that the block in front is an air block and moves the ant forward if it is
+            if (blockInFront is Antymology.Terrain.AirBlock)
+            {
+                transform.position += moveDir;
+            }
+            else
+            {
+                AbstractBlock blockAboveAndInFront = GetBlockAboveandInFront();
+                // If the block in front isn't an air block, checks if the block above and in front is an air block and moves the ant up and forward if it is
+                if (blockAboveAndInFront is Antymology.Terrain.AirBlock)
+                {
+                    transform.position += moveDir + new Vector3(0, 8, 0);
+                }
+                else
+                {
+                    AbstractBlock blockTwoAboveAndInFront = GetBlockTwoAboveAndInFront();
+                    // If the block above and in front isn't an air block, checks if the block two blocks above and in front is an air block and moves the ant up two blocks and forward if it is
+                    if (blockTwoAboveAndInFront is Antymology.Terrain.AirBlock)
+                    {
+                        transform.position += moveDir + new Vector3(0, 16, 0);
+                    }
+                }
+
+            }
         }
     }
 
     // Function to rotate the ant 90 degrees to the right
-    protected void RotateRight()
+    public void RotateRight()
     {
         transform.Rotate(0, 90, 0);
     }
 
+    // Function to rotate the ant 90 degrees to the left
+    public void RotateLeft()
+    {
+        transform.Rotate(0, -90, 0);
+    }
+
     // Function to eat mulch and gain health
-    protected void EatMulch()
+    public void EatMulch()
     {
         // Get the block below the ant to see if there is mulch to eat
         AbstractBlock block = GetBlockBelow();
@@ -133,7 +193,7 @@ public class Ant : MonoBehaviour
     }
 
     // Function to dig up the block below an ant and move down into the space where the block was
-    protected void DigBlock()
+    public void DigBlock()
     {
         // Get the block below the ant to see if there is a block to dig
         AbstractBlock block = GetBlockBelow();
@@ -152,7 +212,7 @@ public class Ant : MonoBehaviour
     }
 
     // Function to transfer health to another ant in the same block
-    protected void GiveHealth(Ant otherAnt, float healthToGive)
+    public void GiveHealth(Ant otherAnt, float healthToGive)
     {
         // Checks that the current ant has more health than the amount it is trying to give and that the other ant is in the same block
         if (currentHealth > healthToGive && antsInBlock.Contains(otherAnt))
@@ -160,6 +220,37 @@ public class Ant : MonoBehaviour
             currentHealth -= healthToGive;
             otherAnt.ReceiveHealth(healthToGive);
             Debug.Log(gameObject.name + " gave " + healthToGive + " health to another ant. New health: " + currentHealth);
+        }
+    }
+
+    // Function to give health to the lowest health ant in the same block
+    public void GiveHealthToLowestHealthInBlock()
+    {
+        // Stops looking if antsInBlock hasn't been initialized yet or if there are no other ants in block
+        if (antsInBlock == null || antsInBlock.Count <= 1)
+            return;
+
+        Ant lowestHealthAnt = null;
+        float lowestHealth = float.MaxValue;
+
+        foreach (Ant ant in antsInBlock)
+        {
+            // Ignore this ant (shouldn't give health to self)
+            if (ant == this)
+                continue;
+
+            // Checks each ant in the block to find the one with the lowest health
+            if (ant.currentHealth < lowestHealth)
+            {
+                lowestHealth = ant.currentHealth;
+                lowestHealthAnt = ant;
+            }
+        }
+
+        if (lowestHealthAnt != null)
+        {
+            // Give 10 health to the lowest health ant (arbitrary amount for now, maybe changed later or made variable)
+            GiveHealth(lowestHealthAnt, 10f);
         }
     }
 
@@ -189,7 +280,7 @@ public class Ant : MonoBehaviour
     }
 
     // Checks whether the ant can move forward based on the blocks in front of it and above
-    protected bool CanMoveForward()
+    public bool CanMoveForward()
     {
         AbstractBlock blockInFront = GetBlockInFront();
         AbstractBlock blockAboveAndInFront = GetBlockAboveandInFront();
@@ -207,7 +298,7 @@ public class Ant : MonoBehaviour
     #region Get Blocks
 
     // Function to get the block in front of the ant based on its current rotation
-    protected AbstractBlock GetBlockInFront()
+    public AbstractBlock GetBlockInFront()
     {
         Vector3 antPos = transform.position;
         
@@ -222,7 +313,7 @@ public class Ant : MonoBehaviour
     }
 
     // Function to get the block directly below the ant
-    protected AbstractBlock GetBlockBelow()
+    public AbstractBlock GetBlockBelow()
     {
         Vector3 antPos = transform.position;
         int x = Mathf.FloorToInt(antPos.x);
