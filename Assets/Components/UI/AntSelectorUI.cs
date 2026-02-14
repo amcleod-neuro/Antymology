@@ -21,6 +21,13 @@ public class AntSelectorUI : MonoBehaviour
 
         // Find and sort all ants so Queen is first
         sortedAnts = FindObjectsOfType<Ant>();
+        
+        if (sortedAnts.Length == 0)
+        {
+            Debug.LogWarning("AntSelectorUI: No ants found in scene");
+            return;
+        }
+
         System.Array.Sort(sortedAnts, (a, b) => {
             bool aIsQueen = a is QueenAnt;
             bool bIsQueen = b is QueenAnt;
@@ -41,12 +48,18 @@ public class AntSelectorUI : MonoBehaviour
         {
             antSelector.onValueChanged.AddListener(OnAntSelected);
             antSelector.AddOptions(antNames);
+            // Set initial selection to the first ant (should be the queen if present)
+            if (antNames.Count > 0)
+            {
+                antSelector.value = 0;
+                OnAntSelected(0); // Immediately set camera to first ant
+            }
         }
     }
 
     void OnAntSelected(int index)
     {
-        if (trackingCamera != null && index >= 0 && index < sortedAnts.Length)
+        if (trackingCamera != null && index >= 0 && index < sortedAnts.Length && sortedAnts[index] != null)
         {
             trackingCamera.target = sortedAnts[index].transform;
         }

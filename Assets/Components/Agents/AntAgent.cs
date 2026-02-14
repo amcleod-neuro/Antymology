@@ -46,9 +46,10 @@ public class AntAgent : Agent
     }
 
     private float timeSinceLastAction = 0f;
-    private const float ACTION_INTERVAL = 0.083f; // ~12 actions per second
+    private const float ACTION_INTERVAL = 2f; // one action per 2 seconds
+    private float timeUntilFirstAction = 3f; // Wait 3 seconds for ant to settle
 
-    private void Update()
+    private void FixedUpdate()
     {
         // Manually trigger decision requests for exploration
         if (ant == null)
@@ -57,7 +58,19 @@ public class AntAgent : Agent
             return;
         }
 
-        timeSinceLastAction += Time.deltaTime;
+        if (!ant.IsGrounded())
+        {
+            return;
+        }
+
+        // Wait for ant to settle on ground before taking actions
+        if (timeUntilFirstAction > 0)
+        {
+            timeUntilFirstAction -= Time.fixedDeltaTime;
+            return;
+        }
+
+        timeSinceLastAction += Time.fixedDeltaTime;
         if (timeSinceLastAction >= ACTION_INTERVAL)
         {
             timeSinceLastAction = 0f;
@@ -84,6 +97,11 @@ public class AntAgent : Agent
             }
             previousHealth = ant.currentHealth;
         }
+    }
+
+    private bool IsGrounded()
+    {
+        return ant.IsGrounded();
     }
 
     public override void CollectObservations(VectorSensor sensor)
@@ -150,7 +168,7 @@ public class AntAgent : Agent
     {
         // Get the discrete action (which action to perform)
         int action = useRandomActions ? Random.Range(0, 7) : actions.DiscreteActions[0];
-        Debug.Log($"AntAgent.OnActionReceived() called with action: {action}");
+        /// Debug.Log($"AntAgent.OnActionReceived() called with action: {action}");
 
         // Execute the corresponding action
         switch (action)

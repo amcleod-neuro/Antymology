@@ -45,9 +45,10 @@ public class QueenAgent : Agent
     }
 
     private float timeSinceLastAction = 0f;
-    private const float ACTION_INTERVAL = 0.083f; // ~12 actions per second
+    private const float ACTION_INTERVAL = 2f; // one action per 2 seconds
+    private float timeUntilFirstAction = 3f; // Wait 3 seconds for queen to settle
 
-    private void Update()
+    private void FixedUpdate()
     {
         // Manually trigger decision requests for exploration
         if (queenAnt == null)
@@ -56,7 +57,19 @@ public class QueenAgent : Agent
             return;
         }
 
-        timeSinceLastAction += Time.deltaTime;
+        if (!queenAnt.IsGrounded())
+        {
+            return;
+        }
+
+        // Wait for queen to settle on ground before taking actions
+        if (timeUntilFirstAction > 0)
+        {
+            timeUntilFirstAction -= Time.fixedDeltaTime;
+            return;
+        }
+
+        timeSinceLastAction += Time.fixedDeltaTime;
         if (timeSinceLastAction >= ACTION_INTERVAL)
         {
             timeSinceLastAction = 0f;
@@ -85,6 +98,11 @@ public class QueenAgent : Agent
             }
             previousHealth = queenAnt.currentHealth;
         }
+    }
+
+    private bool IsGrounded()
+    {
+        return queenAnt.IsGrounded();
     }
 
     public override void CollectObservations(VectorSensor sensor)

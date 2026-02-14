@@ -82,8 +82,9 @@ MonoBehaviour:
   maxHealth: 100
   currentHealth: 0
   antsInBlock: []
-  distanceToQueen: 1000
+  distanceToQueen: 100
   directionToQueen: {x: 0, y: 0, z: 0}
+  modelForwardLocal: {x: 1, y: 0, z: 0}
 --- !u!23 &2839620964973243937
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -160,10 +161,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.10795
-  m_Height: 0.1054
-  m_Direction: 1
-  m_Center: {x: 0.00795, y: 0, z: 0.05535}
+  m_Radius: 0.07
+  m_Height: 0.25
+  m_Direction: 0
+  m_Center: {x: 0.00795, y: 0, z: 0.1}
 --- !u!114 &2202969582265478784
 MonoBehaviour:
   m_ObjectHideFlags: 0

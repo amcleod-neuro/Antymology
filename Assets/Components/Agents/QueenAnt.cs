@@ -30,12 +30,11 @@ public class QueenAnt : Ant
     // Function to place a nest block in front of the queen ant and remove her health accordingly
     public void PlaceNestBlock()
     {
-        // Uses ant function to get the block in front of the queen
-        AbstractBlock blockInFront = GetBlockInFront();
+        Vector3Int coords = GetBlockInFrontCoords();
 
-        if (CanPlaceNestBlock(blockInFront.worldXCoordinate, blockInFront.worldYCoordinate, blockInFront.worldZCoordinate))
+        if (CanPlaceNestBlock(coords.x, coords.y, coords.z))
         {
-            Antymology.Terrain.WorldManager.Instance.SetBlock(blockInFront.worldXCoordinate, blockInFront.worldYCoordinate, blockInFront.worldZCoordinate, new Antymology.Terrain.NestBlock());
+            Antymology.Terrain.WorldManager.Instance.SetBlock(coords.x, coords.y, coords.z, new Antymology.Terrain.NestBlock());
             LogicScript.nestBlockCount++; // Increment the nest block count so the UI can update
             currentHealth -= maxHealth / 3f; // Reduce health by 1/3 of max health
         }
@@ -60,8 +59,7 @@ public class QueenAnt : Ant
     // Check that the block in front of the queen is air and she has enough health to place down a nest block
     public bool CanPlaceNestBlock(int x, int y, int z)
     {
-        // Checks if the block in front is an air block
-        AbstractBlock blockInFront = GetBlockInFront();
+        AbstractBlock blockInFront = Antymology.Terrain.WorldManager.Instance.GetBlock(x, y, z);
         if (!(blockInFront is Antymology.Terrain.AirBlock))
             return false;
 

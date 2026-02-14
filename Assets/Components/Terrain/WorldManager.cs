@@ -106,7 +106,7 @@ namespace Antymology.Terrain
 
                 float worldX = SpawnPoint.x - 0.5f + jitterX;
                 float worldZ = SpawnPoint.z - 0.5f + jitterZ;
-                float worldY = Blocks.GetLength(1) + 20f; // spawn high so ants fall onto terrain
+                float worldY = Blocks.GetLength(1) + 15f; // spawn high so ants fall onto terrain
 
                 Vector3 spawnPos = new Vector3(worldX, worldY, worldZ);
 
@@ -249,6 +249,7 @@ namespace Antymology.Terrain
         #endregion
 
         #region Helpers
+
 
         #region Blocks
 
