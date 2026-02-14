@@ -64,7 +64,7 @@ public class QueenAnt : Ant
             return false;
 
         // Checks the queen has enough health to place the nest block
-        if (currentHealth < 1/3f * maxHealth)
+        if (currentHealth < 0.333f * maxHealth)
             return false;
         
         return true;
@@ -79,7 +79,7 @@ public class QueenAnt : Ant
         foreach (Ant ant in allAnts)
         {
             // Skip self and other queen agents
-            if (ant == this || ant is QueenAgent)
+            if (ant == this || ant is QueenAnt)
                 continue;
 
             float distance = Vector3.Distance(transform.position, ant.transform.position);

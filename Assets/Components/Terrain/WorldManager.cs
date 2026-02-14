@@ -206,7 +206,13 @@ namespace Antymology.Terrain
                 Destroy(ant.gameObject);
             }
 
-            // Regenerate the terrain data and chunks
+            // Reinitialize the Blocks array to clear all old data (eaten mulch, dug blocks, etc.)
+            Blocks = new AbstractBlock[
+                ConfigurationManager.Instance.World_Diameter * ConfigurationManager.Instance.Chunk_Diameter,
+                ConfigurationManager.Instance.World_Height * ConfigurationManager.Instance.Chunk_Diameter,
+                ConfigurationManager.Instance.World_Diameter * ConfigurationManager.Instance.Chunk_Diameter];
+
+            // Regenerate fresh terrain data
             GenerateData();
 
             // Update all chunks to reflect new terrain data

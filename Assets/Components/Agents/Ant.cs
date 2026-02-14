@@ -501,28 +501,44 @@ public class Ant : MonoBehaviour
     public AbstractBlock GetBlockInFront()
     {
         Vector3Int coords = GetBlockInFrontCoords();
-        return Antymology.Terrain.WorldManager.Instance.GetBlock(coords.x, coords.y, coords.z);
+        AbstractBlock block = Antymology.Terrain.WorldManager.Instance.GetBlock(coords.x, coords.y, coords.z);
+        block.worldXCoordinate = coords.x;
+        block.worldYCoordinate = coords.y;
+        block.worldZCoordinate = coords.z;
+        return block;
     }
 
     // Function to get the block directly below the ant
     public AbstractBlock GetBlockBelow()
     {
         Vector3Int coords = GetBlockBelowCoords();
-        return Antymology.Terrain.WorldManager.Instance.GetBlock(coords.x, coords.y, coords.z);
+        AbstractBlock block = Antymology.Terrain.WorldManager.Instance.GetBlock(coords.x, coords.y, coords.z);
+        block.worldXCoordinate = coords.x;
+        block.worldYCoordinate = coords.y;
+        block.worldZCoordinate = coords.z;
+        return block;
     }
 
     // Function to get the block above and in front of the ant based on its current rotation
     protected AbstractBlock GetBlockAboveandInFront()
     {
         Vector3Int coords = GetBlockAboveAndInFrontCoords();
-        return Antymology.Terrain.WorldManager.Instance.GetBlock(coords.x, coords.y, coords.z);
+        AbstractBlock block = Antymology.Terrain.WorldManager.Instance.GetBlock(coords.x, coords.y, coords.z);
+        block.worldXCoordinate = coords.x;
+        block.worldYCoordinate = coords.y;
+        block.worldZCoordinate = coords.z;
+        return block;
     }
 
     // Function to get the block one block forward and two blocks above the ant based on its current rotation
     protected AbstractBlock GetBlockTwoAboveAndInFront()
     {
         Vector3Int coords = GetBlockTwoAboveAndInFrontCoords();
-        return Antymology.Terrain.WorldManager.Instance.GetBlock(coords.x, coords.y, coords.z);
+        AbstractBlock block = Antymology.Terrain.WorldManager.Instance.GetBlock(coords.x, coords.y, coords.z);
+        block.worldXCoordinate = coords.x;
+        block.worldYCoordinate = coords.y;
+        block.worldZCoordinate = coords.z;
+        return block;
     }
 
     // Function to convert the ant's world position to block grid coordinates for the block directly below the ant.

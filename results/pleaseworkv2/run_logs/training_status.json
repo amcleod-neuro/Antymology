@@ -1,0 +1,29 @@
+{
+    "AntBehaviour": {
+        "checkpoints": [
+            {
+                "steps": 0,
+                "file_path": "results\\pleaseworkv2\\AntBehaviour\\AntBehaviour-0.onnx",
+                "reward": null,
+                "creation_time": 1771060380.2333665,
+                "auxillary_file_paths": [
+                    "results\\pleaseworkv2\\AntBehaviour\\AntBehaviour-0.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 0,
+            "file_path": "results\\pleaseworkv2\\AntBehaviour.onnx",
+            "reward": null,
+            "creation_time": 1771060380.2333665,
+            "auxillary_file_paths": [
+                "results\\pleaseworkv2\\AntBehaviour\\AntBehaviour-0.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "1.1.0",
+        "torch_version": "2.2.2+cu121"
+    }
+}
