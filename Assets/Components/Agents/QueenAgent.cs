@@ -139,8 +139,12 @@ public class QueenAgent : Agent
     public override void OnActionReceived(ActionBuffers actions)
     {
         // Get the discrete action (which action to perform)
+        if (!LogicScript.AIisOn)
+        {
+            useRandomActions = true; // Force random actions when AI is toggled off
+        }
         int action = useRandomActions ? Random.Range(0, 9) : actions.DiscreteActions[0];
-        Debug.Log($"QueenAgent.OnActionReceived() called with action: {action}");
+        // Debug.Log($"QueenAgent.OnActionReceived() called with action: {action}");
 
         // Execute the corresponding action
         switch (action)

@@ -15,18 +15,18 @@ public class ConfigurationManager : Singleton<ConfigurationManager>
     /// World_Diameter = 16 (reduced to 4 for faster reset)
     /// World_Height = 4 (reduced to 3 for faster reset)
     /// Number_Of_Acidic_Regions = 10 (reduced to 1 for more playable space)
-    /// Starting_Ant_Count = 25 (reduced to 5 for faster spawn)
+    /// Starting_Ant_Count = 100 (reduced to 5 for faster spawn)
     /// </summary>
 
     /// <summary>
     /// The number of chunks in the x and z dimension of the world.
     /// </summary>
-    public int World_Diameter = 4;
+    public int World_Diameter = 16;
 
     /// <summary>
     /// The number of chunks in the y dimension of the world.
     /// </summary>
-    public int World_Height = 2;
+    public int World_Height = 4;
 
     /// <summary>
     /// The number of blocks in any dimension of a chunk.
@@ -41,7 +41,7 @@ public class ConfigurationManager : Singleton<ConfigurationManager>
     /// <summary>
     /// The number of acidic regions on the map.
     /// </summary>
-    public int Number_Of_Acidic_Regions = 1;
+    public int Number_Of_Acidic_Regions = 10;
 
     /// <summary>
     /// The radius of each acidic region
@@ -61,7 +61,7 @@ public class ConfigurationManager : Singleton<ConfigurationManager>
     /// <summary>
     /// The number of ants to spawn at the start of the game.
     /// </summary>
-    public int Starting_Ant_Count = 5;
+    public int Starting_Ant_Count = 100;
 
     /// <summary>
     /// The amount of health gained from mulch blocks.
@@ -78,7 +78,7 @@ public class ConfigurationManager : Singleton<ConfigurationManager>
     /// When enabled, sets Time.timeScale to Training_Time_Scale.
     /// Toggle this on during ML training, off during normal gameplay.
     /// </summary>
-    public bool Training_Mode = true;
+    public bool Training_Mode = false;
 
     /// <summary>
     /// Time scale multiplier when Training_Mode is enabled.

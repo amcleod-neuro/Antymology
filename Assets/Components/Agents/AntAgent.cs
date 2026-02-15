@@ -166,8 +166,13 @@ public class AntAgent : Agent
 
     public override void OnActionReceived(ActionBuffers actions)
     {
+        if (!LogicScript.AIisOn)
+        {
+            useRandomActions = true; // Force random actions when AI is toggled off
+        }
         // Get the discrete action (which action to perform)
         int action = useRandomActions ? Random.Range(0, 7) : actions.DiscreteActions[0];
+
         /// Debug.Log($"AntAgent.OnActionReceived() called with action: {action}");
 
         // Execute the corresponding action

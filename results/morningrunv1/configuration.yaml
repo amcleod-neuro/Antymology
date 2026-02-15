@@ -44,7 +44,6 @@ behaviors:
     threaded: false
     self_play: null
     behavioral_cloning: null
-    
   QueenAntBehaviour:
     trainer_type: ppo
     hyperparameters:
@@ -111,11 +110,11 @@ engine_settings:
   no_graphics_monitor: false
 environment_parameters: null
 checkpoint_settings:
-  run_id: pleaseworkv4
+  run_id: morningrunv1
   initialize_from: null
   load_model: false
   resume: false
-  force: true
+  force: false
   train_model: false
   inference: false
   results_dir: results
