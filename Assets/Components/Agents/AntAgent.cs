@@ -18,6 +18,11 @@ public class AntAgent : Agent
     
     // Debug flag to use random actions instead of model predictions (useful for testing before training)
     [SerializeField] private bool useRandomActions = false;
+
+    // Variables used in heuristic mode for testing random actions
+    private float timeSinceLastAction = 0f;
+    private const float ACTION_INTERVAL = 2f; // one action per 2 seconds
+    private float timeUntilFirstAction = 3f; // Wait 3 seconds for ant to settle
     
     // Track previous health to calculate survival bonus
     private float previousHealth;
@@ -33,21 +38,11 @@ public class AntAgent : Agent
         }
     }
 
-    protected override void OnDisable()
-    {
-        // Skip base cleanup - we're not using the Academy properly anyway
-        // base.OnDisable();
-    }
-
     public override void OnEpisodeBegin()
     {
         Debug.Log("AntAgent.OnEpisodeBegin() called!");
         previousHealth = ant.maxHealth;
     }
-
-    private float timeSinceLastAction = 0f;
-    private const float ACTION_INTERVAL = 2f; // one action per 2 seconds
-    private float timeUntilFirstAction = 3f; // Wait 3 seconds for ant to settle
 
     private void FixedUpdate()
     {

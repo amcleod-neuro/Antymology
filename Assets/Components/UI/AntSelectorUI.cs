@@ -13,48 +13,43 @@ public class AntSelectorUI : MonoBehaviour
     // Function to update the dropdown with all ants in the scene
     public void UpdateAntSelector()
     {
-        // Clear dropdown
-        if (antSelector != null)
-            antSelector.options.Clear();
 
-        sortedAnts = new Ant[0]; // Clear the sorted ants array
+if (antSelector == null) return;
 
-        // Find and sort all ants so Queen is first
-        sortedAnts = FindObjectsOfType<Ant>();
-        
-        if (sortedAnts.Length == 0)
-        {
-            Debug.LogWarning("AntSelectorUI: No ants found in scene");
-            return;
-        }
+    // Clear existing options
+    antSelector.onValueChanged.RemoveListener(OnAntSelected);
+    antSelector.ClearOptions();
 
-        System.Array.Sort(sortedAnts, (a, b) => {
-            bool aIsQueen = a is QueenAnt;
-            bool bIsQueen = b is QueenAnt;
-            if (aIsQueen && !bIsQueen) return -1;
-            if (!aIsQueen && bIsQueen) return 1;
-            return 0;
-        });
+    // Find all ants in the scene and sort them with the queen first, then workers
+    sortedAnts = FindObjectsOfType<Ant>();
 
-        // Collect names from sorted ants
-        List<string> antNames = new List<string>();
-        foreach (Ant ant in sortedAnts)
-        {
-            antNames.Add(ant.gameObject.name);
-        }
+    if (sortedAnts.Length == 0)
+    {
+        Debug.LogWarning("AntSelectorUI: No ants found in scene");
+        return;
+    }
 
-        // Setup dropdown
-        if (antSelector != null)
-        {
-            antSelector.onValueChanged.AddListener(OnAntSelected);
-            antSelector.AddOptions(antNames);
-            // Set initial selection to the first ant (should be the queen if present)
-            if (antNames.Count > 0)
-            {
-                antSelector.value = 0;
-                OnAntSelected(0); // Immediately set camera to first ant
-            }
-        }
+    System.Array.Sort(sortedAnts, (a, b) =>
+    {
+        bool aIsQueen = a is QueenAnt;
+        bool bIsQueen = b is QueenAnt;
+        if (aIsQueen && !bIsQueen) return -1;
+        if (!aIsQueen && bIsQueen) return 1;
+        return 0;
+    });
+
+    // Populate dropdown options with ant names
+    List<string> antNames = new List<string>();
+    foreach (var ant in sortedAnts)
+        antNames.Add(ant.gameObject.name);
+
+    antSelector.AddOptions(antNames);
+    antSelector.onValueChanged.AddListener(OnAntSelected);
+
+    // Default to selecting the first ant (ideally the queen) when updating
+    antSelector.value = 0;
+    antSelector.RefreshShownValue();
+    OnAntSelected(0);
     }
 
     void OnAntSelected(int index)

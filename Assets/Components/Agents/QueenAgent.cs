@@ -15,6 +15,11 @@ public class QueenAgent : Agent
     // Track state for decision making
     private int nestBlocksPlacedThisEpisode = 0;
     private float previousHealth;
+
+    // Variables used in heuristic mode for testing random actions
+    private float timeSinceLastAction = 0f;
+    private const float ACTION_INTERVAL = 2f; // one action per 2 seconds
+    private float timeUntilFirstAction = 3f; // Wait 3 seconds for queen to settle
     
     // Debug flag to use random actions instead of model predictions (useful for testing before training)
     [SerializeField] private bool useRandomActions = false;
@@ -43,10 +48,6 @@ public class QueenAgent : Agent
         nestBlocksPlacedThisEpisode = 0;
         previousHealth = queenAnt.maxHealth;
     }
-
-    private float timeSinceLastAction = 0f;
-    private const float ACTION_INTERVAL = 2f; // one action per 2 seconds
-    private float timeUntilFirstAction = 3f; // Wait 3 seconds for queen to settle
 
     private void FixedUpdate()
     {

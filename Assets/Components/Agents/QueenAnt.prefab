@@ -93,6 +93,16 @@ PrefabInstance:
       propertyPath: 'm_BrainParameters.m_ActionSpec.BranchSizes.Array.data[0]'
       value: 9
       objectReference: {fileID: 0}
+    - target: {fileID: 7417753543611437415, guid: d7780acb88adbf64ca50d4f1ada7577a,
+        type: 3}
+      propertyPath: m_Height
+      value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 7417753543611437415, guid: d7780acb88adbf64ca50d4f1ada7577a,
+        type: 3}
+      propertyPath: m_Radius
+      value: 0.05
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 2202969582265478784, guid: d7780acb88adbf64ca50d4f1ada7577a, type: 3}
     - {fileID: 1474743780564532853, guid: d7780acb88adbf64ca50d4f1ada7577a, type: 3}
@@ -203,6 +213,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a5c9d521e5ef4759a8246a07d52221e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.ML-Agents::Unity.MLAgents.DecisionRequester
-  DecisionPeriod: 5
+  DecisionPeriod: 1
   DecisionStep: 0
   TakeActionsBetweenDecisions: 1

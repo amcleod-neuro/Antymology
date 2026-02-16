@@ -380,7 +380,7 @@ public class Ant : MonoBehaviour
 
             if (block is Antymology.Terrain.NestBlock)
             {
-                LogicScript.nestBlockCount--; // Decrement the nest block count so the UI can update (not optimal behaviour but possible)
+                NestBlockScript.nestBlockCount--; // Decrement the nest block count so the UI can update (not optimal behaviour but possible)
             }
         }
     }

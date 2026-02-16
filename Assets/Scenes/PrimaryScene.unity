@@ -152,7 +152,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7abe07ef616a3d346ab340640390373b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LogicScript
-  nestBlocksText: {fileID: 83689746}
 --- !u!114 &55168590
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -274,8 +273,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 10, y: -10}
-  m_SizeDelta: {x: 20, y: 20}
+  m_AnchoredPosition: {x: 10, y: -20}
+  m_SizeDelta: {x: 30, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &74060187
 MonoBehaviour:
@@ -326,6 +325,7 @@ GameObject:
   - component: {fileID: 83689745}
   - component: {fileID: 83689747}
   - component: {fileID: 83689746}
+  - component: {fileID: 83689748}
   m_Layer: 5
   m_Name: NestBlocks (TMP)
   m_TagString: Untagged
@@ -452,6 +452,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 83689744}
   m_CullTransparentMesh: 1
+--- !u!114 &83689748
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 83689744}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3dc13ddcc9547294490fd3f01d2aa2a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AntSelectorScript
+  nestBlocksText: {fileID: 83689746}
 --- !u!1 &110622054
 GameObject:
   m_ObjectHideFlags: 0
@@ -576,8 +589,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 9, y: -0.5}
-  m_SizeDelta: {x: -28, y: -3}
+  m_AnchoredPosition: {x: 10, y: -0.5}
+  m_SizeDelta: {x: -30, y: -3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &261363685
 MonoBehaviour:
@@ -592,25 +605,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Text
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
-  m_RaycastTarget: 1
+  m_Color: {r: 0.10943389, g: 0.101381205, b: 0.101381205, a: 1}
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 14
+    m_Font: {fileID: 12800000, guid: e3265ab4bf004d28a9537516768c1c75, type: 3}
+    m_FontSize: 30
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 10
-    m_MaxSize: 40
+    m_MinSize: 3
+    m_MaxSize: 45
     m_Alignment: 0
     m_AlignByGeometry: 0
     m_RichText: 1
-    m_HorizontalOverflow: 0
-    m_VerticalOverflow: 0
+    m_HorizontalOverflow: 1
+    m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: AI Mode On
 --- !u!222 &261363686
@@ -696,6 +709,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 418679272}
   m_CullTransparentMesh: 1
+--- !u!1 &502460324
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 502460326}
+  - component: {fileID: 502460325}
+  m_Layer: 0
+  m_Name: LogicScriptObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &502460325
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 502460324}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7abe07ef616a3d346ab340640390373b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LogicScript
+--- !u!4 &502460326
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 502460324}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 90.63171, y: -0, z: 20.73784}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &692547240
 GameObject:
   m_ObjectHideFlags: 0
@@ -1130,7 +1187,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 160, y: 20}
+  m_SizeDelta: {x: 160, y: 40}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1116765930
 MonoBehaviour:
@@ -1179,17 +1236,17 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11500000, guid: 7abe07ef616a3d346ab340640390373b, type: 3}
-        m_TargetAssemblyTypeName: UnityEditor.MonoScript, UnityEditor.CoreModule
-        m_MethodName: set_name
-        m_Mode: 5
+      - m_Target: {fileID: 502460325}
+        m_TargetAssemblyTypeName: LogicScript, Assembly-CSharp
+        m_MethodName: OnToggleAI
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: LogicScript
-          m_BoolArgument: 0
+          m_BoolArgument: 1
         m_CallState: 2
   m_IsOn: 1
 --- !u!1 &1153958627
@@ -1698,7 +1755,6 @@ GameObject:
   - component: {fileID: 1290373828}
   - component: {fileID: 1290373827}
   - component: {fileID: 1290373826}
-  - component: {fileID: 1290373829}
   m_Layer: 5
   m_Name: ResetButton
   m_TagString: Untagged
@@ -1721,10 +1777,10 @@ RectTransform:
   - {fileID: 1575895063}
   m_Father: {fileID: 55168593}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0, y: 50}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchorMin: {x: 0, y: 0.2}
+  m_AnchorMax: {x: 0, y: 0.2}
+  m_AnchoredPosition: {x: 0, y: 344}
+  m_SizeDelta: {x: 160, y: 40}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1290373826
 MonoBehaviour:
@@ -1769,7 +1825,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1290373827}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 502460325}
+        m_TargetAssemblyTypeName: LogicScript, Assembly-CSharp
+        m_MethodName: OnButtonClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1290373827
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1808,19 +1876,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1290373824}
   m_CullTransparentMesh: 1
---- !u!114 &1290373829
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1290373824}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7abe07ef616a3d346ab340640390373b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LogicScript
-  nestBlocksText: {fileID: 0}
 --- !u!850595691 &1455046710
 LightingSettings:
   m_ObjectHideFlags: 0
@@ -2197,8 +2252,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24
-  m_fontSizeBase: 24
+  m_fontSize: 36
+  m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -2393,52 +2448,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
---- !u!1 &1640142310
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1640142312}
-  - component: {fileID: 1640142311}
-  m_Layer: 0
-  m_Name: EpisodeManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1640142311
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1640142310}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 24bc72dbd2539f44994159c70ad693b2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EpisodeManager
-  maxEpisodeTime: 500
-  rewardAntSurvivalWithQueenBlocks: 1
---- !u!4 &1640142312
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1640142310}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 72.1353, y: -0, z: 61.27523}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1645173405
 GameObject:
   m_ObjectHideFlags: 0
@@ -2770,5 +2779,5 @@ SceneRoots:
   - {fileID: 55168593}
   - {fileID: 909079585}
   - {fileID: 1592725962}
-  - {fileID: 1640142312}
   - {fileID: 692547242}
+  - {fileID: 502460326}

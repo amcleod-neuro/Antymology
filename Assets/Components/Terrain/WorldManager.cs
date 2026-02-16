@@ -122,12 +122,12 @@ namespace Antymology.Terrain
         {
             for (int i = 0; i < ConfigurationManager.Instance.Starting_Ant_Count; i++)
             {
-                float jitterX = (float)(RNG.NextDouble() - 0.5) * 2f; // ±1 unit
-                float jitterZ = (float)(RNG.NextDouble() - 0.5) * 2f; // ±1 unit
+                float jitterX = (float)(RNG.NextDouble() - 0.5); // ±0.5 unit
+                float jitterZ = (float)(RNG.NextDouble() - 0.5); // ±0.5 unit
 
                 float worldX = SpawnPoint.x - 0.5f + jitterX;
                 float worldZ = SpawnPoint.z - 0.5f + jitterZ;
-                float worldY = Blocks.GetLength(1) + 15f; // spawn high so ants fall onto terrain
+                float worldY = Blocks.GetLength(1) + 10f; // spawn high so ants fall onto terrain
 
                 Vector3 spawnPos = new Vector3(worldX, worldY, worldZ);
 
@@ -194,7 +194,7 @@ namespace Antymology.Terrain
 
         /// <summary>
         /// Resets the world for a new episode by clearing all chunks and regenerating the terrain.
-        /// Called by EpisodeManager at the start of each new episode during training.
+        /// Called by EpisodeManager at the start of each new episode during training and by reset button.
         /// </summary>
         public void ResetWorldForNewEpisode()
         {
@@ -231,7 +231,17 @@ namespace Antymology.Terrain
             // Generate new ants at the new spawn location
             GenerateAnts();
 
-            Debug.Log("World terrain reset for new episode");
+            // Reset nest block count in UI and ant selector
+            NestBlockScript.nestBlockCount = 0;
+            AntSelectorUI antSelectorUI = FindObjectOfType<AntSelectorUI>();
+            
+            // Wait one frame to call the Ant Selector update to wait until end of frame for ants to be destroyed
+            RunNextFrame(() =>
+            {
+                antSelectorUI.UpdateAntSelector();
+            });
+
+            // Debug.Log("World terrain reset for new episode");
         }
 
         /// <summary>
@@ -313,6 +323,19 @@ namespace Antymology.Terrain
 
         #region Helpers
 
+        /// <summary>
+        /// Utility function to run a given action on the next frame, used to ensure UI updates after world reset.
+        /// </summary>
+        void RunNextFrame(System.Action action)
+        {
+            StartCoroutine(RunNextFrameCoroutine(action));
+        }
+
+        IEnumerator RunNextFrameCoroutine(System.Action action)
+        {
+            yield return null; // wait exactly one frame
+            action?.Invoke();
+        }
 
         #region Blocks
 
