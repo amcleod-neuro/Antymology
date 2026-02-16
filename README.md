@@ -10,6 +10,8 @@ This is a simulation that is meant to capture ants using intelligent and coopera
 
 Unforuntately, the ants don't display much intelligent behaviour due to extreme limitations in terms of experience with the software and time to train. Hopefully the effort can be seen, because a lot really was put into this project. There are also MANY problems that I realized after training in terms of the agent files, like basic counting errors, caused by long work hours and dozens upon dozens of changes. While regularly this would be fixed, that is just not possible due to that requiring complete retraining and there not being time to do that, so please forgive the problems, I will point them out and own up to them as they appear. This report will attempt to be professional in the beginning, but as we dig deeper into mistakes that you only see when making a document like this, there will be more candid and less professional wording, I apologize.
 
+IMPORTANT NOTE FOR LOOKING AT COMMITS: I kept my results from each training session and the metadata all in the github for the sake of keeping a record and because I kept losing things when crashes happened. Because of that, the insertions/deletions are very bloated, as there are tons of log files, model attempts, packages, recovery files, etc being added/deleted each time. So please don't think I actually wrote 5000 insertions myself, a single model file is 3000+ lines or if 30 files are changed, it was a lot of adding one thing meant I needed to modify another file, or change a variable in the prefab, then each one modifies the scene files, etc.
+
 ## Agents and Objects
 
 ### Blocks
